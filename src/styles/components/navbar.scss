@@ -1,0 +1,48 @@
+.navbar1 {
+  box-shadow: 5px 13px 18px #218ee821;
+  border-radius: 76px;
+  opacity: 1;
+  height: 120px;
+  @media screen and (max-width:990px) {
+  height: auto;    
+  }
+}
+
+.navbar-brand img {
+  margin: 0 30px;
+  height: 65px;
+  @media screen and (max-width: 1100px) {
+    width: 150px;
+  }
+}
+
+.navGraph {
+  margin-left: 0;
+  @media screen and (max-width: 1100px) {
+    width: 200px;
+  }
+}
+p {
+  color: #1e88e5;
+}
+
+.userImg {
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+.info {
+  margin: 0 15px;
+}
+.settings {
+  height: 30px;
+  width: 30px;
+  margin: 5px 15px 0 0;
+}
+.logout {
+  margin: 5px 30px 0 0;
+  height: 30px;
+  width: 30px;
+}

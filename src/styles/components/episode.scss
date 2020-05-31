@@ -1,0 +1,45 @@
+@import '../base/base';
+@import '../base/settings';
+
+.listitem{
+    background: #F1F6F9 0% 0% no-repeat padding-box;
+    border-radius: 24px;
+    opacity: 1;
+}
+
+.fa-check{
+    color: #53E7A5;
+    font-size: 35px;
+    margin:10px;
+}
+.dot{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 8px;
+    background-color: #FCD26C;
+}
+
+.dot2{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 8px;
+    background-color: #84C7FF;
+}
+.righticons{
+    color: $white;
+    font-size: 28px;
+    margin: 7px;
+}
+.duration {
+    font-weight: 200;
+    margin: 15px 0;
+    font-size: medium;
+}
+.title {
+    text-align: left;
+    padding: 15px;
+}

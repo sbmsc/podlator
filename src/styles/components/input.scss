@@ -1,0 +1,53 @@
+@import '../base/base';
+@import '../base/settings';
+
+input {
+    margin: $m-size 0 $s-size 0;
+    outline: none;
+    padding: $s-size*0.3 $xl-size $s-size*0.3 $xl-size;
+    border-radius: $border;
+    border: 1px solid $primary-color;
+    width: 60%;
+    height: 9%;
+    font: $font;
+    font-weight: 200;
+    max-width: 100%;
+}
+
+.box-middle input{
+    width: 95%;
+    height: 10%;
+}
+
+.box-big input{
+    width: 730px;
+    height: 45px;
+}
+
+.filter{
+    width: 100%;
+    input{
+        height: 9%;
+    }
+    input[type="search"], textarea {
+        background-color : #F1F6F9; 
+    }
+    .has-search .form-control {
+        // padding-left: 2.375rem;
+        border-radius: $border;
+        width: 100%;
+        padding: $s-size $s-size $s-size $xl-size;
+    }
+    
+    .has-search .form-control-feedback {
+        padding: $s-size 0 $s-size*1.5 2.1rem;
+        position: absolute;
+        z-index: 2;
+        display: block;
+        width: 2.375rem;
+        line-height: 2.375rem;
+        text-align: center;
+        pointer-events: none;
+        color: #aaa;
+    }
+}

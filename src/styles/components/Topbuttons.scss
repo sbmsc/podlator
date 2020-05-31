@@ -1,0 +1,71 @@
+.epBtn {
+  margin: 20px 20px 0 20px;
+  color: $white;
+  background: transparent linear-gradient(180deg, #a1d4ff 0%, #6bbcff 100%) 0%
+    0% no-repeat padding-box;
+  box-shadow: 4px 19px 23px #64cdfc29;
+  border-radius: 46px;
+  opacity: 1;
+  outline: none;
+  border: none;
+  height: 58px;
+  font-size: x-large;
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 885px) {
+    font-size: large;
+  }
+}
+
+.feedBtn {
+  margin: 20px 20px 0 20px;
+  color: $white;
+  background: transparent linear-gradient(180deg, #65e8b7 0%, #37e688 100%) 0%
+    0% no-repeat padding-box;
+  box-shadow: 4px 19px 23px #64cdfc29;
+  border-radius: 46px;
+  opacity: 1;
+  outline: none;
+  border: none;
+  height: 58px;
+  font-size: x-large;
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 885px) {
+    font-size: large;
+  }
+}
+
+.dot-top {
+  height: 45px;
+  width: 45px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  margin: auto 0;
+  position: relative;
+}
+
+.epBtn:focus {
+  outline: none;
+}
+
+.feedBtn:focus {
+  outline: none;
+}
+.buttonIcons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.tick {
+    margin: auto 0;
+}
+.btnTitle{
+  margin: auto 0;
+}
+.row {
+  justify-content: center;
+}

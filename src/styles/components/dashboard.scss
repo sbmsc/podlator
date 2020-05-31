@@ -1,0 +1,93 @@
+@import "../base/base";
+@import "../base/settings";
+
+.main {
+  height: 65vh;
+  padding: 0;
+}
+
+.dashboard {
+  padding: 20px 20px 0 20px;
+}
+
+.select {
+  display: flex;
+
+  .fa-check{
+    color: $white;
+    margin-right: 10px;
+  }
+  .fa-copy{
+    color: $primary-color;
+  }
+  .fa-rss{
+    color: #43E695;
+  }
+}
+
+.uploadModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 500px;
+  max-height: 100%;
+  width: 900px;
+  max-width: 100%;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 5px 13px 18px #218ee821;
+  border: 1px solid #ffffff;
+  border-radius: 41px;
+  opacity: 1;
+}
+.modalContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  height: 90%;
+  width: 90%;
+  border: 1px dashed #218ee8;
+  border-radius: 41px;
+  opacity: 1;
+  padding: 100px;
+}
+
+.ReactModal__Overlay{
+   background-color: #218ee8;
+}
+
+.rssFeedModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px;
+  input {
+    height: auto;
+  }
+  .add-button {
+    width: 150px;
+  }
+}
+
+.percent{
+  margin-top: 12vh;
+}
+
+
+//search
+.has-search {
+  position: relative;
+}
+.has-search input {
+  text-indent: 30px;
+  font-size: large;
+}
+.has-search .fa-search { 
+  position: absolute;
+  top: 13px;
+  left: 18px;
+  font-size: 25px;
+}

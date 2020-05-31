@@ -1,0 +1,26 @@
+@import '../base/base';
+@import '../base/settings';
+
+.bluebutton{
+    border-radius: $border;
+    background-color: $primary-color; 
+    color: $white;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    height: $xl-size;
+    width: 39%;
+    font: $font;
+    font-weight: 200;
+}
+
+.bluebutton:hover {
+    outline: none;
+}
+
+.bluebutton:active {
+    outline: none;
+}
+
+.bluebutton:focus{
+    outline:none;
+}

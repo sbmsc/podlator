@@ -1,0 +1,83 @@
+@import '../base/base';
+@import '../base/settings';
+
+.box-layou {
+    background: $primary-color;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-y: hidden;
+}
+
+.bo{
+    background: fade-out($white,.0);
+    box-shadow: 0 10px 20px -10px #00000070;
+    border-radius: 70px;
+    padding: $l-size $m-size;
+    text-align: center;
+    width: 75%;
+    height: 90%;
+    @media (max-width: $desktop-breakpoint){
+        width: 80%;
+        height: 80%;
+    }
+    .payment-box{
+        border: none;
+        border-radius: none;
+       
+    }
+
+}
+.plan-container {
+    height: 600px;
+    width: 90%;
+    margin:0  auto;
+}
+
+.plan{
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #218EE8;
+    border-radius: 40px;
+    opacity: 1;
+    padding: 12% 5%;
+    margin: 0 3%;
+    color: $primary-color;
+}
+
+.payment-box{
+    border: 1px solid #218EE8;
+    border-radius: 38px 38px 38px 38px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 0 10px 0 ;
+    margin: 10px;
+    height: 500px;
+    text-align: center;
+    justify-content: space-between;
+    p{
+        color: black;
+        margin: 25px 0 20px 0;
+    }
+    h4{
+        margin: 20px 0 0 0;
+    }
+    .bluebutton{
+        margin: 0 auto;
+        display: block;
+        width: 90%;
+    }
+    hr {
+        border: 0;
+        clear:both;
+        display:block;
+        width: 96%;               
+        background-color: grey;
+        height: 1px;
+      }
+}
+

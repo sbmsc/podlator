@@ -1,0 +1,33 @@
+.head{
+    display: flex;
+}
+
+.information{
+    input{
+        border: none;
+        background-color: #F1F6F9;
+        height: 30px;
+        margin: 6px;
+        padding: 20px 10px 20px 10px;
+    }
+   
+}
+
+.account{
+    height: 100%;
+    overflow: auto;
+    .bluebutton{
+        border-radius: $border;
+        background-color: $primary-color; 
+        color: $white;
+        margin: 6px;
+        height: 40px;
+        width: 50%;
+        font: $font;
+        font-weight: 200;
+    }
+    .col-md-5{
+        margin: 0;
+        padding: 0;
+    }
+}

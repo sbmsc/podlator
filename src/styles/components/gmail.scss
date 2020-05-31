@@ -1,0 +1,12 @@
+@import '../base/base';
+@import '../base/settings';
+
+.gmail {
+    background: transparent linear-gradient(359deg, #DC373D 0%, #F58695 100%) 0% 0% no-repeat padding-box;
+    border-radius: 25px;
+    opacity: 1;
+    color: $white;
+    width: 35%;
+    padding: $s-size*0.5 0;
+    margin-left: 2%; 
+}
