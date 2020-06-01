@@ -17,9 +17,6 @@ const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
   const handleFormSubmit = async (ev) => {
     ev.preventDefault();
 
-    console.log({ selectedPlan });
-    return;
-
     setProcessingTo(true);
 
     const cardElement = elements.getElement('card');
@@ -50,6 +47,8 @@ const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
     invalid: {},
     hidePostalCode: true,
   };
+
+  console.log({ selectedPlan });
   return (
     selectedPlan && (
       <form onSubmit={handleFormSubmit}>
