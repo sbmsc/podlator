@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import bbckaldi from '../../../apis/bbckaldi';
 
-const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
+const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
   const [isProcessing, setProcessingTo] = useState(false);
   const [checkoutError, setCheckoutError] = useState();
 
@@ -17,25 +17,17 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
   const handleFormSubmit = async (ev) => {
     ev.preventDefault();
 
-    const billingDetails = {
-      plan: 'premium',
-    };
+    console.log({ selectedPlan });
+    return;
+
     setProcessingTo(true);
 
     const cardElement = elements.getElement('card');
 
     try {
-      const { data: clientSecret } = await bbckaldi.post(
-        '/subscription/create',
-        {
-          amount: price * 100,
-        }
-      );
-
       const paymentMethodReq = await stripe.createPaymentMethod({
         type: 'card',
         card: cardElement,
-        billing_details: billingDetails,
       });
 
       if (paymentMethodReq.error) {
@@ -44,16 +36,10 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
         return;
       }
 
-      const { error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: paymentMethodReq.paymentMethod.id,
+      await bbckaldi.post('/subscription/create', {
+        paymentMethodId: paymentMethodReq.paymentMethod.id,
+        priceId: selectedPlan.priceId, // this should come from ui
       });
-
-      if (error) {
-        setCheckoutError(error.message);
-        setProcessingTo(false);
-        return;
-      }
-
       onSuccessfulCheckout();
     } catch (err) {
       setCheckoutError(err.message);
@@ -65,16 +51,15 @@ const CheckoutForm = ({ price, onSuccessfulCheckout }) => {
     hidePostalCode: true,
   };
   return (
-    <form onSubmit={handleFormSubmit}>
-      <CardElement
-        options={cardElementOptions}
-        onChange={handleCardDetailsChange}
-      />
-      {checkoutError && <div>{checkoutError}</div>}
-      <button className='bluebutton' disabled={isProcessing}>
-        {isProcessing ? 'Processing...' : `Pay ${price}€`}
-      </button>
-    </form>
+    selectedPlan && (
+      <form onSubmit={handleFormSubmit}>
+        <CardElement options={cardElementOptions} onChange={handleCardDetailsChange} />
+        {checkoutError && <div>{checkoutError}</div>}
+        <button className='bluebutton' disabled={isProcessing}>
+          {isProcessing ? 'Processing...' : `Pay ${selectedPlan.price}€`}
+        </button>
+      </form>
+    )
   );
 };
 
