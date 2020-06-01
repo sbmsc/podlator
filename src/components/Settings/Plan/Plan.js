@@ -23,9 +23,9 @@ export default class Plan extends React.Component {
       });
   }
 
-  handleSubscription = () => {
-    this.state.selectedPlan = true;
-  };
+  // handleSubscription = () => {
+  //   this.state.selectedPlan = true;
+  // };
   renderPlans = () => {
     if (this.state.plans) {
       const { plans } = this.state;
@@ -38,7 +38,7 @@ export default class Plan extends React.Component {
               </h2>
               <h4>{ele.summary}</h4>
               <p>{ele.details}</p>
-              <button className='bluebutton' onClick={this.handleSubscription}>
+              <button className='bluebutton' onClick={() => this.setState({ selectedPlan: ele })}>
                 Select Plan
               </button>
             </div>
@@ -78,15 +78,13 @@ export default class Plan extends React.Component {
           <hr></hr>
           <div className='row'>
             <h5 className='col-5'>Your current plan expires on 02/03/2021</h5>
-            <h5 className='col-5'>
-              Silver Tier: 125mn consumed over 240 credit - 21 days left
-            </h5>
+            <h5 className='col-5'>Silver Tier: 125mn consumed over 240 credit - 21 days left</h5>
           </div>
           <div className='row'>{this.renderPlans()}</div>
         </div>
         <Elements stripe={stripePromise}>
           <CheckoutForm
-            price={1}
+            selectedPlan={this.state.selectedPlan}
             onSuccessfulCheckout={() => Router.push('/dashboard')}
           />
         </Elements>

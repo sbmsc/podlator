@@ -57,6 +57,7 @@ class Login extends React.Component {
   // token=window.location.search.split("?token=")[1];
   gmailHandler = () => {
     window.open('https://kaldi-api.herokuapp.com/auth/google/login', '_self');
+    // window.open('http://localhost:5000/auth/google/login', '_self');
   };
   facebookHandler = () => {
     window.open('https://kaldi-api.herokuapp.com/auth/fb/login', '_self');
@@ -119,10 +120,7 @@ class Login extends React.Component {
                 ;
                 <p style={{ marginTop: 40, color: '#CBCBCB' }}>
                   Don't have an account?
-                  <span
-                    style={{ color: '#218EE8' }}
-                    onClick={this.handleSignup}
-                  >
+                  <span style={{ color: '#218EE8' }} onClick={this.handleSignup}>
                     Create your account
                   </span>
                 </p>
