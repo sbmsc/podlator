@@ -9,7 +9,7 @@ class Bigmenu extends React.Component {
       console.log(rss);
       const mappedrss = rss.map((ele) => {
         return (
-          <Episode key={ele.id} title={ele.title} filename={ele.published} id={ele.id} duration={ele.duration} rss={true} />
+          <Episode key={ele.id} title={ele.title} filename={ele.published} id={ele.id} duration={ele.duration} rss={ele.source} />
         );
       });
       return mappedrss;

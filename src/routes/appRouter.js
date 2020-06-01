@@ -10,6 +10,7 @@ import PrivateRoute from './privateroutes';
 import Payment from '../components/SignUp/Payment';
 import Transcriber from '../components/TranscriptPlayer/Transcriber';
 import Settings from '../components/Settings/Settings';
+import Loader from '../components/SignUp/Redirecter';
 
 const routes = (
   <Router>
@@ -22,6 +23,7 @@ const routes = (
         <PrivateRoute path='/transcriber' component={Transcriber} />
         <PrivateRoute path='/transcript' component={Transcript} />
         <PrivateRoute path='/settings' component={Settings} />
+        <PublicRoute path="/auth/google/callback" component={Loader}/>
         <Route component={NotFoundPage} />
       </Switch>
     </div>

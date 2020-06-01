@@ -16,7 +16,7 @@ const Episode = (props) => {
     ret += "" + mins + ":" + (secs < 10 ? "0" : "");
     ret += "" + secs;
   }
-
+  console.log(props)
   return (
     <div>
       <div className="row listitem" style={{textAlign: "center"}}>
@@ -24,12 +24,12 @@ const Episode = (props) => {
           <i className="fas fa-check"></i>
         </div>
         <div className="col-8 title">
-          {props.rss?
-         ( <Link to={{ pathname: "/transcriber", id: props.id ,rss:false}}>
+          {props.rss==='Rss'?
+         ( <Link to={{ pathname: "/transcriber", id: props.id ,rss:true}}>
             {" "}
             <h3>{props.title}</h3>
           </Link>):
-          ( <Link to={{ pathname: "/transcriber", id: props.id ,rss:true}}>
+          ( <Link to={{ pathname: "/transcriber", id: props.id ,rss:false}}>
           {" "}
           <h3>{props.title}</h3>
         </Link>)}

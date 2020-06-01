@@ -4,11 +4,11 @@ import Transcript from "./Transcripter";
 
 export default class Transcriber extends React.Component {
   render() {
-    console.log(this.props.location);
+    console.log(this.props);
     return (
       <div style={{height: "100vh", padding: "20px 20px 20px 20px"}}>
         <Navbar/>
-        <Transcript id={this.props.location.id} />
+        <Transcript id={this.props.location.id} rss={this.props.location.rss} />
       </div>
     );
   }

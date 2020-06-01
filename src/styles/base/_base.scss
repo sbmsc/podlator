@@ -1,4 +1,4 @@
-@import "./settings";
+@import './settings';
 
 html {
   font-size: 62.5%;
@@ -6,7 +6,7 @@ html {
 
 body {
   background-color: #f0f4f5;
-  font-family: "Poppins", Arial, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
   font-size: $m-size;
   padding: 0;
   margin: 0;
@@ -48,6 +48,10 @@ p {
   );
 }
 
-pre{
+pre {
   cursor: pointer;
+}
+
+button:focus {
+  outline: none;
 }
