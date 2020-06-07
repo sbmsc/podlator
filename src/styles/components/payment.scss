@@ -1,7 +1,7 @@
 @import '../base/base';
 @import '../base/settings';
 
-.box-layou {
+.box-layout-payment {
     background: $primary-color;
     height: 100vh;
     width: 100vw;
@@ -14,7 +14,7 @@
     overflow-y: hidden;
 }
 
-.bo{
+.box-payment{
     background: fade-out($white,.0);
     box-shadow: 0 10px 20px -10px #00000070;
     border-radius: 70px;
@@ -34,7 +34,7 @@
 
 }
 .plan-container {
-    height: 600px;
+    height: auto;
     width: 90%;
     margin:0  auto;
 }

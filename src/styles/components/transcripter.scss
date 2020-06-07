@@ -131,7 +131,11 @@ audio {
 .progress::before {
   background-color: grey;
 }
-
+.sliderRow {
+  input {
+    margin: 0;
+  }
+}
 .slider {
   -webkit-appearance: none;
   width: 100%;
@@ -165,4 +169,44 @@ audio {
   height: 30px;
   background: #51e7a2;
   cursor: pointer;
+}
+.exportModal {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px;
+  .exportModal-title {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .exportModal-subtitle {
+    font-size: 20px;
+  }
+  hr {
+    width: 80%;
+    float: right;
+    margin: 14px auto;
+  }
+  .docType {
+    padding: 20px;
+    width: 80%;
+    background-color: #f4f8fa;
+    border-radius: 24px;
+  }
+  ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+    input {
+      margin-right: 30px;
+    }
+  }
+  .btn-group-toggle {
+    height: 40px;
+    margin: 10px auto;
+  }
+  .btn {
+    font-size: 20px;
+    width: 200px;
+  }
 }

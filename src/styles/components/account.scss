@@ -1,33 +1,87 @@
-.head{
-    display: flex;
+.head {
+  display: flex;
 }
 
-.information{
-    input{
-        border: none;
-        background-color: #F1F6F9;
-        height: 30px;
-        margin: 6px;
-        padding: 20px 10px 20px 10px;
-    }
-   
+.information {
+  input {
+    border: none;
+    background-color: #f1f6f9;
+    height: 30px;
+    margin: 6px;
+    padding: 20px 10px 20px 10px;
+  }
 }
 
-.account{
-    height: 100%;
-    overflow: auto;
-    .bluebutton{
-        border-radius: $border;
-        background-color: $primary-color; 
-        color: $white;
-        margin: 6px;
-        height: 40px;
-        width: 50%;
-        font: $font;
-        font-weight: 200;
-    }
-    .col-md-5{
-        margin: 0;
-        padding: 0;
-    }
+.account {
+  height: 100%;
+  overflow: auto;
+  .bluebutton {
+    border-radius: $border;
+    background-color: $primary-color;
+    color: $white;
+    margin: 6px;
+    height: 40px;
+    width: 50%;
+    font: $font;
+    font-weight: 200;
+  }
+  .col-md-5 {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.settingsmodal {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  p {
+    color: black;
+  }
+}
+.lang {
+  position: relative;
+  display: flex;
+  height: 3em;
+  line-height: 3;
+  overflow: hidden;
+  padding: 0 30px;
+  /* Reset Select */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #f4f8fa;
+    border-radius: 10px;
+  }
+  /* Remove IE arrow */
+  select::-ms-expand {
+    display: none;
+  }
+  select {
+    flex: 1;
+    padding: 0 0.5em;
+    cursor: pointer;
+  }
+}
+.lang::after {
+  content: '\25BC';
+  border-radius: 10px;
+  position: absolute;
+  color: blue;
+  top: 0;
+  right: 30px;
+  padding: 0 1em;
+  background: #f4f8fa;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: 0.25s all ease;
+  -o-transition: 0.25s all ease;
+  transition: 0.25s all ease;
 }

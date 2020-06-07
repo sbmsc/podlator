@@ -6,15 +6,21 @@ class Bigmenu extends React.Component {
   renderRss = () => {
     if (this.props.rss) {
       const { rss } = this.props;
-      console.log(rss);
+
       const mappedrss = rss.map((ele) => {
         return (
-          <Episode key={ele.id} title={ele.title} filename={ele.published} id={ele.id} duration={ele.duration} rss={ele.source} />
+          <Episode
+            key={ele.id}
+            title={ele.title}
+            filename={ele.published}
+            id={ele.id}
+            duration={ele.duration}
+            rss={ele.source}
+          />
         );
       });
       return mappedrss;
     } else {
-      console.log("here");
       return <h1>Loading</h1>;
     }
   };
@@ -23,7 +29,7 @@ class Bigmenu extends React.Component {
     return (
       <div className="box-big">
         <div className="box-middle-content">
-          <div className="row" style={{width: "100%"}}>
+          <div className="row" style={{ width: "100%" }}>
             <div className="col-9">
               <Filter />
             </div>

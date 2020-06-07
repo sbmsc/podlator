@@ -1,9 +1,10 @@
 import React from 'react';
 import kaldi from '../../apis/bbckaldi';
 import logo from '../../images/logo.png';
-import { setUserSession } from '../../session/session';
+import { setUserSession } from '../../utils/session';
 import { Spinner } from 'react-bootstrap';
 import queryString from 'query-string';
+import Validation from '../../utils/validation';
 class Login extends React.Component {
   state = {
     username: '',
@@ -21,10 +22,13 @@ class Login extends React.Component {
 
   async handleSubmit() {
     this.setState({ loading: true });
-    if (this.state.username === '') {
-      this.setState({ error: 'Please Enter Email' });
-    } else if (this.state.password === '') {
-      this.setState({ error: 'Please Enter Password' });
+    if (!Validation.validateEmail(this.state.username)) {
+      this.setState({ error: 'Invalid Email', loading: false });
+    } else if (!Validation.validatePassword(this.state.password)) {
+      this.setState({
+        error: 'Invalid Password! At least 4 characters required',
+        loading: false,
+      });
     } else {
       var data = {
         email: this.state.username,
@@ -57,7 +61,6 @@ class Login extends React.Component {
   // token=window.location.search.split("?token=")[1];
   gmailHandler = () => {
     window.open('https://kaldi-api.herokuapp.com/auth/google/login', '_self');
-    // window.open('http://localhost:5000/auth/google/login', '_self');
   };
   facebookHandler = () => {
     window.open('https://kaldi-api.herokuapp.com/auth/fb/login', '_self');
@@ -113,14 +116,15 @@ class Login extends React.Component {
                 <button className='facebook' onClick={this.facebookHandler}>
                   Facebook
                 </button>
-                ;
                 <button className='gmail' onClick={this.gmailHandler}>
                   Gmail
                 </button>
-                ;
                 <p style={{ marginTop: 40, color: '#CBCBCB' }}>
                   Don't have an account?
-                  <span style={{ color: '#218EE8' }} onClick={this.handleSignup}>
+                  <span
+                    style={{ color: '#218EE8' }}
+                    onClick={this.handleSignup}
+                  >
                     Create your account
                   </span>
                 </p>

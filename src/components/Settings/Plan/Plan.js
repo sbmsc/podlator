@@ -3,16 +3,28 @@ import bbckaldi from '../../../apis/bbckaldi';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
-import { Router } from 'react-router-dom';
-
+// import { Router } from 'react-router-dom'
 const stripePromise = loadStripe('pk_test_eCySixt2iVp3Lob1nXKGy2a800iQdQJUus');
 export default class Plan extends React.Component {
   state = {
     plans: null,
     selectedPlan: null,
+    subscriptionDetails: null,
+    loading: true,
   };
   componentDidMount() {
-    bbckaldi
+    this.getSubscriptionStatus();
+    this.getPlans();
+  }
+
+  getSubscriptionStatus = async () => {
+    await bbckaldi.get('/subscription').then((response) => {
+      this.setState({ subscriptionDetails: response.data, loading: false });
+    });
+  };
+
+  getPlans = async () => {
+    await bbckaldi
       .get('/plans')
       .then((response) => {
         this.setState({ plans: response.data });
@@ -21,11 +33,7 @@ export default class Plan extends React.Component {
         alert('Something went wrong');
         console.log(err);
       });
-  }
-
-  // handleSubscription = () => {
-  //   this.state.selectedPlan = true;
-  // };
+  };
   renderPlans = () => {
     if (this.state.plans) {
       const { plans } = this.state;
@@ -38,9 +46,24 @@ export default class Plan extends React.Component {
               </h2>
               <h4>{ele.summary}</h4>
               <p>{ele.details}</p>
-              <button className='bluebutton' onClick={() => this.setState({ selectedPlan: ele })}>
-                Select Plan
-              </button>
+              {this.state.subscriptionDetails &&
+              this.state.subscriptionDetails.planId === ele._id ? (
+                <button
+                  className='bluebutton'
+                  onClick={() => this.setState({ selectedPlan: ele })}
+                  disabled
+                >
+                  {' '}
+                  Selected Plan
+                </button>
+              ) : (
+                <button
+                  className='bluebutton'
+                  onClick={() => this.setState({ selectedPlan: ele })}
+                >
+                  Select Plan
+                </button>
+              )}
             </div>
           </div>
         );
@@ -48,44 +71,44 @@ export default class Plan extends React.Component {
       return mappedPlans;
     }
   };
-
+  successfulCheckoutHandler = () => {
+    console.log('Successfully created subscription');
+    this.setState({ selectedPlan: null });
+  };
   render() {
-    // let res = (
-    // <div>
-    //   <h2>Choose Your Plan</h2>
-    //   <hr></hr>
-    //   <div className='row'>
-    //     <h5 className='col-5'>Your current plan expires on 02/03/2021</h5>
-    //     <h5 className='col-5'>
-    //       Silver Tier: 125mn consumed over 240 credit - 21 days left
-    //     </h5>
-    //   </div>
-    //   <div className='row'>{this.renderPlans()}</div>
-    // </div>
-    // );
-    // if (this.state.selectedPlan) {
-    //   res = (
-    // <CheckoutForm
-    //   price={1}
-    //   onSuccessfulCheckout={() => Router.push('/dashboard')}
-    // />
-    //   );
-    // }
     return (
       <div className='plan-container'>
-        <div>
-          <h2>Choose Your Plan</h2>
-          <hr></hr>
-          <div className='row'>
-            <h5 className='col-5'>Your current plan expires on 02/03/2021</h5>
-            <h5 className='col-5'>Silver Tier: 125mn consumed over 240 credit - 21 days left</h5>
+        <h2>Choose Your Plan</h2>
+        <hr />
+
+        {this.state.loading ? (
+          <div className='row'>Loading your subscription details</div>
+        ) : this.state.subscriptionDetails ? (
+          <div>
+            <div className='row'>
+              <h5 className='col-5'>
+                Your current plan started on{' '}
+                {this.state.subscriptionDetails.createdAt.split('T')[0]}
+              </h5>
+              <h5 className='col-5'>
+                Silver Tier: {this.state.subscriptionDetails.creditsConsumed}{' '}
+                consumed over {this.state.subscriptionDetails.totalCredits}{' '}
+                total credits
+              </h5>
+            </div>
+            <div className='row'>{this.renderPlans()}</div>
           </div>
-          <div className='row'>{this.renderPlans()}</div>
-        </div>
+        ) : (
+          <div>
+            <div className='row'>No subscription found</div>
+            <div className='row'>{this.renderPlans()}</div>
+          </div>
+        )}
+
         <Elements stripe={stripePromise}>
           <CheckoutForm
             selectedPlan={this.state.selectedPlan}
-            onSuccessfulCheckout={() => Router.push('/dashboard')}
+            onSuccessfulCheckout={() => this.successfulCheckoutHandler()}
           />
         </Elements>
       </div>

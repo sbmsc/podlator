@@ -32,14 +32,24 @@ const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
         setProcessingTo(false);
         return;
       }
+      console.log(paymentMethodReq);
 
-      await bbckaldi.post('/subscription/create', {
-        paymentMethodId: paymentMethodReq.paymentMethod.id,
-        priceId: selectedPlan.priceId, // this should come from ui
-      });
+      await bbckaldi
+        .post('/subscription/create', {
+          paymentMethodId: paymentMethodReq.paymentMethod.id,
+          priceId: selectedPlan.priceId, // this should come from ui
+        })
+        .then((response) => {
+          // console.log(response);
+          if (response.status === 200) alert('Payment done successfully!');
+          cardElement.clear();
+          setProcessingTo(false);
+        });
+        console.log(paymentMethodReq)
       onSuccessfulCheckout();
     } catch (err) {
-      setCheckoutError(err.message);
+      setCheckoutError(err.msg);
+      setProcessingTo(false);
     }
   };
   const cardElementOptions = {
@@ -49,13 +59,19 @@ const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
   };
 
   console.log({ selectedPlan });
+
   return (
     selectedPlan && (
       <form onSubmit={handleFormSubmit}>
-        <CardElement options={cardElementOptions} onChange={handleCardDetailsChange} />
+        <CardElement
+          options={cardElementOptions}
+          onChange={handleCardDetailsChange}
+        />
         {checkoutError && <div>{checkoutError}</div>}
         <button className='bluebutton' disabled={isProcessing}>
-          {isProcessing ? 'Processing...' : `Pay ${selectedPlan.price}€`}
+          {isProcessing
+            ? 'Processing...'
+            : `Pay ${selectedPlan.price ? selectedPlan.price : 0}€`}
         </button>
       </form>
     )

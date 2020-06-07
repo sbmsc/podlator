@@ -1,85 +1,113 @@
-import React from "react";
-import kaldi from "../../apis/bbckaldi";
-import logo from "../../images/logo.png";
-
+import React from 'react';
+import kaldi from '../../apis/bbckaldi';
+// import logo from '../../images/logo.png';
+import Validation from '../../utils/validation';
+import { setUserSession } from '../../utils/session';
 class Signup extends React.Component {
   state = {
-    name: "",
-    email: "",
-    password: "",
-    confirm: "",
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirm: '',
+    error: '',
   };
   async handleRegister() {
-    var data = {
+    if (!Validation.validateEmail(this.state.email)) {
+      this.setState({ error: 'Invalid email' });
+      return;
+    }
+    if (!Validation.validatePassword(this.state.password)) {
+      this.setState({ error: 'Invalid password, must have 4 characters' });
+      return;
+    }
+    if (!Validation.validateName(this.state.firstName)) {
+      this.setState({ error: 'Invalid First Name' });
+      return;
+    }
+    if (!Validation.validateName(this.state.lastName)) {
+      this.setState({ error: 'Invalid Last Name' });
+      return;
+    }
+    let data = {
       email: this.state.email,
       password: this.state.password,
-      name: this.state.name,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
     };
-    console.log(data);
     if (this.state.password === this.state.confirm) {
       await kaldi
-        .post("/register", data)
+        .post('/register', data)
         .then((response) => {
           if (response.status === 200) {
-            this.props.history.push("/payment");
+            setUserSession(response.data.token);
+            this.props.history.push('/payment');
           }
         })
         .catch((error) => {
-          this.setState({ error: "User exists" });
+          this.setState({ error: 'Something went wrong' });
           console.log(error);
         });
     } else {
-      this.setState({ error: "Password and confirm password do not match" });
+      this.setState({ error: 'Password and confirm password do not match' });
     }
+  }
+
+  handleSignin = () =>{
+    this.props.history.push('/');
   }
   render() {
     return (
       <div className="box-layout">
         <form className="box">
-          <div className="logo">
-            <img src={logo} alt="logo" height="140px" width="150px" />
-          </div>
           <div className="error">{this.state.error}</div>
           <input
-            type="text"
-            placeholder="Name"
-            name="username"
+            type='text'
+            placeholder='First Name'
+            name='firstName'
             onChange={(event) => {
-              this.setState({ name: event.target.value });
+              this.setState({ firstName: event.target.value });
             }}
           />
-
           <input
-            type="email"
-            placeholder="Email"
-            name="email"
+            type='text'
+            placeholder='Last Name'
+            name='lastName'
+            onChange={(event) => {
+              this.setState({ lastName: event.target.value });
+            }}
+          />
+          <input
+            type='email'
+            placeholder='Email'
+            name='email'
             onChange={(event) => {
               this.setState({ email: event.target.value });
             }}
           />
 
           <input
-            type="password"
-            placeholder="Password"
-            name="password"
+            type='password'
+            placeholder='Password'
+            name='password'
             onChange={(event) => {
               this.setState({ password: event.target.value });
             }}
           />
 
           <input
-            type="password"
-            placeholder="Confirm Password"
-            name="confirmpassword"
+            type='password'
+            placeholder='Confirm Password'
+            name='confirmpassword'
             onChange={(event) => {
               this.setState({ confirm: event.target.value });
             }}
           />
           <div>
             <button
-              className="bluebutton"
-              type="submit"
-              title="Sign In"
+              className='bluebutton'
+              type='submit'
+              title='Sign In'
               onClick={(e) => {
                 e.preventDefault();
                 this.handleRegister();
@@ -88,6 +116,15 @@ class Signup extends React.Component {
               Next
             </button>
           </div>
+          <p style={{ color: '#CBCBCB' }}>
+        Already have an account? 
+        <span
+          style={{ color: '#218EE8' }}
+          onClick={this.handleSignin}
+        >
+          {' '}Login
+        </span>
+      </p>
         </form>
       </div>
     );
