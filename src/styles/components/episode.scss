@@ -1,45 +1,45 @@
 @import '../base/base';
 @import '../base/settings';
 
-.listitem{
-    background: #F1F6F9 0% 0% no-repeat padding-box;
-    border-radius: 24px;
-    opacity: 1;
+.listitem {
+  background: #f1f6f9 0% 0% no-repeat padding-box;
+  border-radius: 24px;
+  opacity: 1;
 }
 
-.fa-check{
-    color: #53E7A5;
-    font-size: 35px;
-    margin:10px;
+.fa-check {
+  color: #53e7a5;
+  font-size: 35px;
+  margin: 10px;
 }
-.dot{
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 8px;
-    background-color: #FCD26C;
+.dot {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 8px;
 }
-
-.dot2{
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 8px;
-    background-color: #84C7FF;
+.dot1 {
+  background-color: #fcd26c;
 }
-.righticons{
-    color: $white;
-    height: 24px;
-    margin: 7px;
+.dot2 {
+  background-color: #84c7ff;
+}
+.dot3 {
+  background-color: #ff8484;
+  cursor: pointer;
+}
+.righticons {
+  color: $white;
+  height: 24px;
+  margin: 7px;
 }
 .duration {
-    font-weight: 200;
-    margin: 15px 0;
-    font-size: medium;
+  font-weight: 200;
+  margin: 15px 0;
+  font-size: medium;
 }
 .title {
-    text-align: left;
-    padding: 15px;
+  text-align: left;
+  padding: 15px;
 }

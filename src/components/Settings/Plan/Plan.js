@@ -3,6 +3,7 @@ import bbckaldi from '../../../apis/bbckaldi';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
+// import { withTheme } from '@material-ui/core';
 // import { Router } from 'react-router-dom'
 const stripePromise = loadStripe('pk_test_eCySixt2iVp3Lob1nXKGy2a800iQdQJUus');
 export default class Plan extends React.Component {
@@ -30,7 +31,7 @@ export default class Plan extends React.Component {
         this.setState({ plans: response.data });
       })
       .catch((err) => {
-        alert('Something went wrong');
+        alert(err.response.data.msg);
         console.log(err);
       });
   };
@@ -39,7 +40,7 @@ export default class Plan extends React.Component {
       const { plans } = this.state;
       const mappedPlans = plans.map((ele) => {
         return (
-          <div className='col-md-3' key={ele._id}>
+          <div className='col-md-4' key={ele._id}>
             <div className='payment-box'>
               <h2>
                 {ele.name} <br />
@@ -50,11 +51,11 @@ export default class Plan extends React.Component {
               this.state.subscriptionDetails.planId === ele._id ? (
                 <button
                   className='bluebutton'
+                  style={{ backgroundColor: '#FAF7F7', color: '#218EE8' }}
                   onClick={() => this.setState({ selectedPlan: ele })}
                   disabled
                 >
-                  {' '}
-                  Selected Plan
+                  Current Plan
                 </button>
               ) : (
                 <button

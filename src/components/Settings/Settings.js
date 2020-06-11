@@ -8,6 +8,7 @@ import Billing from './Billing';
 export default class Settings extends React.Component {
   state = {
     active: 'account',
+    imgUrl:null
   };
 
   handleClick = (divname) => {
@@ -15,11 +16,18 @@ export default class Settings extends React.Component {
       active: divname,
     });
   };
-
+  getImg=(image)=>
+  { console.log('here')
+    this.setState({imgUrl:image})
+  }
+  imgDel=()=>
+  {
+    this.setState({imgUrl:null})
+  }
   render() {
     return (
       <div className='setting'>
-        <Navbar />
+        <Navbar image={this.state.imgUrl} imgDel={this.imgDel}/>
         <div className='row'>
           <div className='box-left col-md-2'>
             <div className='settings-buttons'>
@@ -63,8 +71,8 @@ export default class Settings extends React.Component {
               </button>
             </div>
           </div>
-          <div className='box-middle col-md-9'>
-            {this.state.active === 'account' && <Account />}
+          <div className='display-box col-md-9'>
+            {this.state.active === 'account' && <Account getImg={this.getImg}/>}
             {this.state.active === 'notifications' && <Notifications />}
             {this.state.active === 'plan' && <Plan />}
             {this.state.active === 'billing' && <Billing />}

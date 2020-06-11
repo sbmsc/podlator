@@ -93,7 +93,7 @@ audio {
   justify-content: center;
 }
 .transcriptEditor {
-  padding: 20px;
+  padding: 0 20px;
 }
 .dialogue {
   background: #f1f6f9 0% 0% no-repeat padding-box;
@@ -151,6 +151,15 @@ audio {
 
 .slider:hover {
   opacity: 1;
+}
+.deleteBtn {
+  background: transparent linear-gradient(359deg, #dc373d 0%, #f58695 100%) 0%
+    0% no-repeat padding-box;
+  border-radius: 25px;
+  opacity: 1;
+  color: $white;
+  padding: $s-size * 0.5 10px;
+  width: 95%;
 }
 
 .slider::-webkit-slider-thumb {

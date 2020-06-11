@@ -5,7 +5,8 @@ class LeftMenu extends React.Component {
     return (
       <div className='box-left'>
         <div className='item'>
-          <i className='fas fa-plus'></i> New Episode
+          <i className='fas fa-plus'></i>
+          <span>New Episode</span>
         </div>
         <div className='item'>
           <i className='far fa-edit'> </i>

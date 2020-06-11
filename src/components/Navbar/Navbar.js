@@ -14,6 +14,7 @@ class Navbar extends React.Component {
     email: '',
     firstName: '',
     lastName: '',
+    imageUrl: null,
   };
   handleLogout = (props) => {
     removeUserSession();
@@ -21,19 +22,42 @@ class Navbar extends React.Component {
   };
   componentDidMount = async () => {
     bbckaldi.defaults.headers.common['token'] = getToken();
+    this.getUser();
+  };
+
+  getUser = async () => {
     await bbckaldi
       .get('/user')
-      .then((resp) =>
+      .then((resp) => {
+        if (resp.data.avatarUrl)
+          localStorage.setItem('img', resp.data.avatarUrl);
         this.setState({
           email: resp.data.email,
           firstName: resp.data.firstName,
           lastName: resp.data.lastName,
-        })
-      )
+          imageUrl: resp.data.avatarUrl,
+        });
+      })
       .catch((err) => console.log(err));
   };
+  // componentDidUpdate=()=>
+  // {
+  //   if(this.props.image!==null)
+  //   {
+  //     const {image}=this.props;
+
+  //     this.setState({imageUrl:image})
+
+  //   }
+  // }
 
   render() {
+    const { image } = this.props;
+    if (image) {
+      localStorage.setItem('img', image);
+      if (this.props.imgDel) this.props.imgDel();
+    }
+
     return (
       <nav className='navbar navbar-expand-lg navbar-light bg-light navbar1'>
         <a className='navbar-brand' href='/'>
@@ -80,7 +104,11 @@ class Navbar extends React.Component {
           <ul className='navbar nav'>
             <li className='nav-item'>
               <img
-                src={userImg}
+                src={
+                  localStorage.getItem('img')
+                    ? localStorage.getItem('img')
+                    : userImg
+                }
                 alt='User Img'
                 className='rounded-circle nav-item userImg'
               ></img>

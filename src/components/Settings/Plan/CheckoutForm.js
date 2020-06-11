@@ -40,15 +40,14 @@ const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
           priceId: selectedPlan.priceId, // this should come from ui
         })
         .then((response) => {
-          // console.log(response);
           if (response.status === 200) alert('Payment done successfully!');
           cardElement.clear();
           setProcessingTo(false);
         });
-        console.log(paymentMethodReq)
       onSuccessfulCheckout();
     } catch (err) {
-      setCheckoutError(err.msg);
+      if (err.response.data.msg) setCheckoutError(err.response.data.msg);
+      else setCheckoutError('Something went wrong');
       setProcessingTo(false);
     }
   };
@@ -67,7 +66,7 @@ const CheckoutForm = ({ selectedPlan, onSuccessfulCheckout }) => {
           options={cardElementOptions}
           onChange={handleCardDetailsChange}
         />
-        {checkoutError && <div>{checkoutError}</div>}
+        {checkoutError && <div style={{ color: 'red' }}>{checkoutError}</div>}
         <button className='bluebutton' disabled={isProcessing}>
           {isProcessing
             ? 'Processing...'

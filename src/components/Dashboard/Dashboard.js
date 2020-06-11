@@ -11,6 +11,7 @@ import { getToken } from '../../utils/session';
 import { ProgressBar } from 'react-bootstrap';
 import volume from '../../images/volume.svg';
 import epNtr from '../../images/epNtr.svg';
+import rssBig from '../../images/rssBig.svg';
 export default class Dashboard extends React.Component {
   state = {
     left: true,
@@ -19,7 +20,7 @@ export default class Dashboard extends React.Component {
     param: null,
     selectedOption: undefined,
     newfeed: [],
-    percentTranscribeCompleted:0
+    percentTranscribeCompleted: 0,
   };
 
   componentDidMount() {
@@ -35,6 +36,12 @@ export default class Dashboard extends React.Component {
   }
 
   lefthandler = () => {
+    if(this.state.rss.length!==this.state.newfeed.length&&this.state.newfeed.length!==0)
+    { console.log("here")
+      this.getEpisodes()
+      this.getRss()
+    }
+    console.log("this is prob",this.state.rss.length,this.state.newfeed.length)
     this.setState({
       left: true,
       right: false,
@@ -115,12 +122,11 @@ export default class Dashboard extends React.Component {
     });
   };
   handleTranscribe = async () => {
-    this.setState({uploading:undefined})
+    this.setState({ uploading: undefined });
     this.closeModal();
-     
-     bbckaldi
-       .get('/transcribe/' + this.state.uploadedID 
-      ,{
+
+    bbckaldi
+      .get('/transcribe/' + this.state.uploadedID, {
         // onUploadProgress: (progressEvent) =>{
         //   let percentCompleted = Math.floor(
         //     (progressEvent.loaded * 100) / progressEvent.total
@@ -128,23 +134,29 @@ export default class Dashboard extends React.Component {
         //   console.log("Percentage Completed", progressEvent);
         //   this.setState({ percentTranscribeCompleted : percentCompleted });
         // }
-      }
-      )
+      })
       .then((resp) => {
-        clearInterval(progress)
-        this.setState({percentTranscribeCompleted:100})
+        clearInterval(progress);
+        this.setState({ percentTranscribeCompleted: 100 });
         window.location.reload();
       })
       .catch((error) => {
         if (error.response.data.msg === 'No subscription found')
           alert(error.response.data.msg + '\nPlease subscribe to a plan!');
-        else {alert('Something went wrong')
-        window.location.reload()};
+        else {
+          alert('Something went wrong');
+          window.location.reload();
+        }
       });
 
-      var progress=window.setInterval(()=>this.setState({percentTranscribeCompleted:this.state.percentTranscribeCompleted+1}),500)
-      if(this.state.percentCompleted===99)
-      clearInterval(progress)
+    var progress = window.setInterval(
+      () =>
+        this.setState({
+          percentTranscribeCompleted: this.state.percentTranscribeCompleted + 1,
+        }),
+      500
+    );
+    if (this.state.percentCompleted === 99) clearInterval(progress);
   };
 
   handleModalMessage = () => {
@@ -209,6 +221,7 @@ export default class Dashboard extends React.Component {
     this.closeModal2();
   };
   adjustedRightHandler = () => {
+    
     this.setState({
       left: false,
       right: true,
@@ -282,7 +295,10 @@ export default class Dashboard extends React.Component {
             </button>
           </div>
         </Modal>
-        <Navbar title={this.state.uploadedTitle} transcribeCompleted= {this.state.percentTranscribeCompleted}/>
+        <Navbar
+          title={this.state.uploadedTitle}
+          transcribeCompleted={this.state.percentTranscribeCompleted}
+        />
         <div className='select row'>
           <button
             className='epBtn col'
@@ -309,7 +325,11 @@ export default class Dashboard extends React.Component {
             }}
           >
             <span className='dot-top'>
-              <i className='fas fa-rss buttonIcons'></i>
+              <img
+                src={rssBig}
+                alt='rss'
+                style={{ height: '30px', margin: '7px 0' }}
+              />
             </span>
             <span className='btnTitle'>Podcast Feeds</span>
             <span>

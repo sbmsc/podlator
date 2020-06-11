@@ -1,82 +1,73 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import edit from "../../../images/edit.svg";
-import edited from "../../../images/edited.svg";
-import rss from "../../../images/rss.svg";
-import wav from "../../../images/wav.svg";
-import epTick from "../../../images/epTick.svg";
-import epSound from "../../../images/epSound.svg";
-
+import React from 'react';
+import { Link } from 'react-router-dom';
+import edit from '../../../images/edit.svg';
+import edited from '../../../images/edited.svg';
+import rss from '../../../images/rss.svg';
+import wav from '../../../images/wav.svg';
+import epTick from '../../../images/epTick.svg';
+import epSound from '../../../images/epSound.svg';
+import Utils from '../../../utils/utils';
 const Episode = (props) => {
   // changing seconds to hours:minutes:seconds
-  let ret = "";
+  let ret = '';
   if (props.duration) {
-    let time = props.duration;
-    let hrs = ~~(time / 3600);
-    let mins = ~~((time % 3600) / 60);
-    let secs = ~~time % 60;
-
-    if (hrs > 0) {
-      ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
-    }
-    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-    ret += "" + secs;
+    ret = Utils.secondsToStandard(props.duration);
   }
   return (
     <div>
-      <div className="row listitem forsearch" style={{ textAlign: "center" }}>
-        <div className="col-1">
+      <div className='row listitem forsearch' style={{ textAlign: 'center' }}>
+        <div className='col-1'>
           {props.isTranscribed ? (
-            <img src={epTick} alt="Transcribed" />
+            <img src={epTick} alt='Transcribed' />
           ) : (
-            <img src={epSound} alt="Not Transcribed" />
+            <img src={epSound} alt='Not Transcribed' />
           )}
         </div>
-        <div className="col-8 title">
-          {props.rss === "Rss" ? (
+        <div className='col-8 title'>
+          {props.rss === 'Rss' ? (
             <Link
               to={{
-                pathname: "/transcriber",
+                pathname: '/transcriber',
                 id: props.id,
                 rss: true,
                 title: props.title,
               }}
             >
-              {" "}
+              {' '}
               <h3>{props.title}</h3>
             </Link>
           ) : (
             <Link
               to={{
-                pathname: "/transcriber",
+                pathname: '/transcriber',
                 id: props.id,
                 rss: false,
                 title: props.title,
               }}
             >
-              {" "}
+              {' '}
               <h3>{props.title}</h3>
             </Link>
           )}
         </div>
-        <div className="col-1">
-          <p className="duration">{ret}</p>
+        <div className='col-1'>
+          <p className='duration'>{ret}</p>
         </div>
-        <div className="col-1">
-          <span className="dot">
-            {props.source === "Manual" ? (
-              <img src={wav} alt="wav" className="righticons" />
+        <div className='col-1'>
+          <span className='dot dot1'>
+            {props.source === 'Manual' ? (
+              <img src={wav} alt='wav' className='righticons' />
             ) : (
-              <img src={rss} alt="rss" className="righticons" />
+              <img src={rss} alt='rss' className='righticons' />
             )}
           </span>
         </div>
-        <div className="col-1">
-          <span className="dot2">
+        <div className='col-1'>
+          <span className='dot dot2'>
             {props.isEdited ? (
-              <img src={edited} alt="Edited" className="righticons" />
+              <img src={edited} alt='Edited' className='righticons' />
             ) : (
-              <img src={edit} alt="Edit" className="righticons" />
+              <img src={edit} alt='Edit' className='righticons' />
             )}
           </span>
         </div>

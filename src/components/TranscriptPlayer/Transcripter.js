@@ -7,9 +7,10 @@ import Modal from 'react-modal';
 import fileSaver from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { Redirect } from 'react-router-dom';
-
+import Utils from '../../utils/utils';
 class Transcript extends React.Component {
   state = {
+    id: '',
     transcript: [],
     step: 1,
     paused: true,
@@ -24,13 +25,17 @@ class Transcript extends React.Component {
 
   componentDidMount = async () => {
     const { id, rss } = this.props;
-    if (id) localStorage.setItem('t_id', id);
+    if (id) {
+      localStorage.setItem('t_id', id);
+      this.setState({ id: id });
+    }
     if (rss === true) {
       localStorage.setItem('rss', true);
     }
     if (rss === false) localStorage.setItem('rss', false);
 
     const t_id = localStorage.getItem('t_id');
+    this.setState({ id: t_id });
     const rssCheck = localStorage.getItem('rss');
     let response;
     if (rssCheck === true || rssCheck === 'true') {
@@ -96,18 +101,7 @@ class Transcript extends React.Component {
     }
   };
   getTimestamp = (input) => {
-    let ret = '';
-    let time = Math.floor(input);
-    let hrs = ~~(time / 3600);
-    let mins = ~~((time % 3600) / 60);
-    let secs = ~~time % 60;
-
-    if (hrs > 0) {
-      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
-    }
-    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-    ret += '' + secs;
-    return ret;
+    return Utils.secondsToStandard(Math.floor(input));
   };
   exportData = () => {
     const { exportSpeaker, exportTimestamp } = this.state;
@@ -387,6 +381,17 @@ class Transcript extends React.Component {
     console.log(event);
     this.setState({ inline: event.target.checked });
   };
+  deleteEpisode = async () => {
+    await bbckaldi
+      .delete('/episode/' + this.state.id)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('deleted successfully');
+        }
+      })
+      .catch((err) => console.log(err.response.data.msg));
+    this.setState({ redirect: true });
+  };
   render() {
     const { src, transcript } = this.state;
     if (src === undefined || transcript === undefined)
@@ -595,6 +600,14 @@ class Transcript extends React.Component {
               </div>
               <div className='col-3'>
                 <NotesMenu />
+                <center>
+                  <button
+                    className='deleteBtn'
+                    onClick={(e) => this.deleteEpisode()}
+                  >
+                    Delete Episode
+                  </button>
+                </center>
               </div>
             </div>
           </div>

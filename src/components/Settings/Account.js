@@ -6,17 +6,24 @@ import { removeUserSession } from '../../utils/session';
 import Validation from '../../utils/validation';
 import { Redirect } from 'react-router-dom';
 import { Radio } from '@material-ui/core';
+import Dropzone from 'react-dropzone';
 export default class Account extends React.Component {
   state = {
     user: null,
     selectedOption: false,
     newPassword: '',
     error: null,
+    imageUrl: null,
   };
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    this.getUser();
+  };
+
+  getUser = async () => {
     const response = await bbckaldi.get('/user');
     if (response.data) {
-      this.setState({ user: response.data });
+      this.setState({ user: response.data, imageUrl: response.data.avatarUrl });
+      this.props.getImg(response.data.avatarUrl);
     }
   };
   handleInput = (e) => {
@@ -59,6 +66,21 @@ export default class Account extends React.Component {
       };
     });
   };
+
+  openModal2 = () => {
+    this.setState({
+      selectedOption2: true,
+    });
+  };
+
+  closeModal2 = () => {
+    this.setState(() => {
+      return {
+        selectedOption2: false,
+      };
+    });
+  };
+
   deleteUser = async () => {
     if (window.confirm('Are you sure you want to delete User?')) {
       await bbckaldi
@@ -77,6 +99,7 @@ export default class Account extends React.Component {
       console.log('Account Safe');
     }
   };
+
   handlePasswordUpdate = async () => {
     if (this.state.newPassword !== '') {
       await bbckaldi
@@ -88,6 +111,27 @@ export default class Account extends React.Component {
           alert('couldnt change password');
         });
     }
+  };
+
+  handleDrop = async (accepted) => {
+    const currentFile = accepted[0];
+    var formData = new FormData();
+    formData.append('file', currentFile);
+    console.log('image is', currentFile);
+    await bbckaldi
+      .post('/user/avatar', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+      .then((response) => {
+        this.getUser();
+        this.closeModal2();
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log('error is', error);
+      });
   };
 
   render() {
@@ -120,17 +164,48 @@ export default class Account extends React.Component {
           </div>
         </Modal>
 
+        <Modal
+          isOpen={this.state.selectedOption2}
+          onRequestClose={this.closeModal2}
+          contentLabel='sometext'
+          closeTimeoutMS={200}
+          ariaHideApp={false}
+          className='uploadModal'
+          style={{
+            overlay: {
+              backgroundColor: 'rgb(33,142,232,0.9)',
+            },
+          }}
+        >
+          <div className='modalContent'>
+            <Dropzone onDrop={this.handleDrop} accept='image/*'>
+              {({ getRootProps, getInputProps, isDragReject }) => (
+                <section>
+                  <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    {!isDragReject && (
+                      <h1>Select or drag & drop your file in this area.</h1>
+                    )}
+                    {isDragReject && <h1> Supports only .png,.jpeg</h1>}
+                    <button className='bluebutton'>SELECT</button>
+                  </div>
+                </section>
+              )}
+            </Dropzone>
+          </div>
+        </Modal>
+
         <div className='head'>
           <div>
             <img
-              src={userImg}
+              src={this.state.imageUrl ? this.state.imageUrl : userImg}
               alt='User Img'
               className='rounded-circle nav-item userImg'
             />
           </div>
           <div className='info'>
             <h3>{this.state.user ? this.state.user.firstName : ''}</h3>
-            <p>Change profile picture</p>
+            <p onClick={this.openModal2}>Change profile picture</p>
           </div>
         </div>
         <hr />
@@ -142,7 +217,7 @@ export default class Account extends React.Component {
         ) : null}
 
         <div className='information row'>
-          <div className='col-md-6'>
+          <div className='col-6'>
             <input
               placeholder='First Name'
               name='firstName'
@@ -168,7 +243,7 @@ export default class Account extends React.Component {
               onChange={this.handleInput}
             />
           </div>
-          <div className='col-md-6'>
+          <div className='col-6'>
             <input
               placeholder='Last Name'
               name='lastName'
@@ -208,7 +283,7 @@ export default class Account extends React.Component {
         <div className='row'>
           <div className='col-md-6 lang'>
             <label htmlFor='lang'>Language</label>
-            <select name='lang' id="selectLang">
+            <select name='lang' id='selectLang'>
               <option value='en'>English</option>
               <option value='fr'>French</option>
             </select>
@@ -219,8 +294,15 @@ export default class Account extends React.Component {
               <Radio color='primary' checked />{' '}
             </div>
             <div className='col-11'>
-              <span>Use custom transcription model</span><br/>
-              <span style={{ backgroundColor: '#F4F8FA', padding: "3px", borderRadius: "7px" }}>
+              <span>Use custom transcription model</span>
+              <br />
+              <span
+                style={{
+                  backgroundColor: '#F4F8FA',
+                  padding: '3px',
+                  borderRadius: '7px',
+                }}
+              >
                 {' '}
                 Model_podcast_v1
               </span>

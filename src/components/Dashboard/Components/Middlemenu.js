@@ -6,9 +6,10 @@ class Middlemenu extends React.Component {
   renderEpisodes = () => {
     if (this.props.episodes && this.props.episodes.length > 0) {
       const { episodes } = this.props;
-      const mappedEpisodes = episodes.map((ele) => {
+      const mappedEpisodes = episodes.map((ele, index) => {
         return (
           <Episode
+            index={index}
             key={ele.id}
             title={ele.title}
             source={ele.source}
