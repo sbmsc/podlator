@@ -21,6 +21,7 @@ export default class Notifications extends React.Component {
           emailTranscription: response.data.settings.emailTranscription,
           notifyTranscription: response.data.settings.notifyTranscription,
           newsletter: response.data.settings.newsletter,
+          language:response.data.settings.language
         });
       })
       .catch((err) => console.log(err));

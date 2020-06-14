@@ -7,6 +7,7 @@ import wav from '../../../images/wav.svg';
 import epTick from '../../../images/epTick.svg';
 import epSound from '../../../images/epSound.svg';
 import Utils from '../../../utils/utils';
+import deleteImg from '../../../images/delete.svg';
 const Episode = (props) => {
   // changing seconds to hours:minutes:seconds
   let ret = '';
@@ -23,7 +24,7 @@ const Episode = (props) => {
             <img src={epSound} alt='Not Transcribed' />
           )}
         </div>
-        <div className='col-8 title'>
+        <div className='col-6 title'>
           {props.rss === 'Rss' ? (
             <Link
               to={{
@@ -69,6 +70,23 @@ const Episode = (props) => {
             ) : (
               <img src={edit} alt='Edit' className='righticons' />
             )}
+          </span>
+        </div>
+        <div className='col-1'>
+          <span className='dot dot3'>
+            <img
+              src={deleteImg}
+              alt='delete'
+              className='righticons'
+              onClick={(e) =>
+                props.deleteEpisode(
+                  props.id,
+                  props.index,
+                  props.source,
+                  props.isEdited
+                )
+              }
+            />
           </span>
         </div>
       </div>

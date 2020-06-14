@@ -59,7 +59,7 @@ class Transcript extends React.Component {
       });
     } else {
       response = await bbckaldi.get('/episode/' + t_id).catch((err) => {
-        alert('an error occured');
+        alert('Server was unable to transcribe the given file');
         this.setState({ redirect: true });
       });
       this.props.getTitle({
@@ -68,7 +68,7 @@ class Transcript extends React.Component {
       });
       if (!response.data.transcription)
         response = await bbckaldi.get('/transcribe/' + t_id).catch((err) => {
-          alert('an error occured');
+          alert('Server was unable to transcribe the given file');
           this.setState({ redirect: true });
         });
 

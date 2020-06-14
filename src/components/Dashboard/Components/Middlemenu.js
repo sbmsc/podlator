@@ -1,6 +1,7 @@
 import React from "react";
 import Filter from "./Filter";
 import Episode from "./Episode";
+import bbckaldi from '../../../apis/bbckaldi'
 
 class Middlemenu extends React.Component {
   renderEpisodes = () => {
@@ -19,13 +20,27 @@ class Middlemenu extends React.Component {
             isTranscribed={ele.transcription ? true : false}
             id={ele._id}
             rss={ele.source}
+            deleteEpisode={this.deleteEpisode}
+            
           />
         );
       });
       return mappedEpisodes;
     }
   };
-
+  deleteEpisode = async (id, index,source ,isEdited) => {
+    await bbckaldi
+      .delete('/episode/' + id)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('Episode deleted successfully');
+        }
+      })
+      .catch((err) => console.log(err.response.data.msg));
+    this.props.episodes.splice(index, 1);
+    this.props.delParamWise(source,isEdited)
+    this.setState({tab:true})
+  };
   render() {
     return (
       <div className="box-middle">

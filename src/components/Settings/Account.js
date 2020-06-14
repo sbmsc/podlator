@@ -12,6 +12,7 @@ export default class Account extends React.Component {
     user: null,
     selectedOption: false,
     newPassword: '',
+    confirmPassword:"",
     error: null,
     imageUrl: null,
   };
@@ -30,6 +31,12 @@ export default class Account extends React.Component {
     const { user } = this.state;
     this.setState({ user: { ...user, [e.target.name]: e.target.value } });
   };
+  handleLanguage=(e)=>
+  { let {settings}=this.state.user
+  const {user}=this.state
+    settings.language=e.target.value
+    this.setState({user:{...user,settings}})
+  }
   handleUpdate = async (e) => {
     e.preventDefault();
     const { user } = this.state;
@@ -101,14 +108,31 @@ export default class Account extends React.Component {
   };
 
   handlePasswordUpdate = async () => {
-    if (this.state.newPassword !== '') {
+    if (this.state.newPassword !== ''&&this.state.newPassword===this.state.confirmPassword) {
       await bbckaldi
-        .put('/user/password', { password: this.state.newPassword })
+        .put('/user', { password: this.state.newPassword })
         .then((response) => {
           alert('password changed successfully');
+          this.closeModal()
         })
         .catch((error) => {
           alert('couldnt change password');
+        });
+    }
+    else
+    {
+      alert('passwords dont match')
+    }
+  };
+  handleLangSub = async () => {
+    if (this.state.user.settings) {
+      await bbckaldi
+        .put('/user', { settings:this.state.user.settings } )
+        .then((response) => {
+          alert('Settings changed successfully');
+        })
+        .catch((error) => {
+          alert('couldnt change settings');
         });
     }
   };
@@ -155,8 +179,14 @@ export default class Account extends React.Component {
           <div className='settingsmodal'>
             <h1>Change Password</h1>
             <input
+            type="password"
               placeholder='Enter new password'
               onChange={(e) => this.setState({ newPassword: e.target.value })}
+            />
+            <input
+            type="password"
+              placeholder='Enter confirm password'
+              onChange={(e) => this.setState({ confirmPassword: e.target.value })}
             />
             <button className='bluebutton' onClick={this.handlePasswordUpdate}>
               Update password
@@ -283,10 +313,12 @@ export default class Account extends React.Component {
         <div className='row'>
           <div className='col-md-6 lang'>
             <label htmlFor='lang'>Language</label>
-            <select name='lang' id='selectLang'>
+            <select name='lang' id='selectLang' onChange={this.handleLanguage} value={this.state.user&&this.state.user.settings.language?this.state.user.settings.language:"select Language"}>
               <option value='en'>English</option>
               <option value='fr'>French</option>
             </select>
+            
+            
           </div>
           <div className='col-md-6 row'>
             <div className='col-1'>
@@ -306,9 +338,24 @@ export default class Account extends React.Component {
                 {' '}
                 Model_podcast_v1
               </span>
+             
+            
+            
             </div>
           </div>
+          
         </div>
+        <br/> 
+        <div className="row">
+          <div className="col-md-6 offset-6">
+          <button className='bluebutton' onClick={this.handleLangSub}>
+              {' '}
+              Save
+            </button>
+          </div>
+        </div>
+        
+        
         <hr />
         <div className='row'>
           <div className='col-md-6'>

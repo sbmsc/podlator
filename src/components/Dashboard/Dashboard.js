@@ -205,7 +205,15 @@ export default class Dashboard extends React.Component {
       uploadedID: response.data.id,
     });
   };
-
+  delParamWise=(param,isEdited)=>
+  { this.getEpisodes()
+    if(isEdited)
+    this.getIsEdited()
+    if(param==='Manual')
+    this.getManual()
+    if(param==='Rss')
+    this.getRss()
+  }
   handleURL = (e) => {
     this.setState({ url: e.target.value });
   };
@@ -350,6 +358,8 @@ export default class Dashboard extends React.Component {
                     ? this.state.episodes
                     : this.state[param]
                 }
+                type={this.state.param}
+                delParamWise={this.delParamWise}
               />
             </div>
             <div className='col-md-2'>
