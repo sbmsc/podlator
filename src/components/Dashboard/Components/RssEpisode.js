@@ -2,26 +2,27 @@ import React from 'react';
 import edited from '../../../images/edited.svg';
 import deleteImg from '../../../images/delete.svg';
 import eng from '../../../images/english.svg';
-import Utils from '../../../utils/utils';
+import fr from '../../../images/french.svg';
 
 const RssEpisode = (props) => {
-  let duration = '';
-  if (props.duration) {
-    duration = Utils.secondsToStandard(props.duration);
-  }
   return (
     <div>
-      <div className='row listitem forsearch align-items-center'>
+      <div
+        className='row listitem forsearch align-items-center'
+        style={{ fontWeight: '200' }}
+      >
         <div className='col-3'>
-          <h3>{props.title}</h3>
+          <h3 style={{ fontWeight: '400' }}>{props.title}</h3>
+          {props.author}
         </div>
         <div className='col-2'>{props.category}</div>
-        <div className='col-2'>{props.published.split('T')[0]}</div>
-        <div className='col-1'>
-          <p>{duration}</p>
-        </div>
+        <div className='col-2'>{props.date}</div>
         <div className='col-2'>
-          <img src={eng} alt='eng' className='righticons' />
+          {props.language.match(/en+/i) ? (
+            <img src={eng} alt='eng' className='righticons' />
+          ) : (
+            <img src={fr} alt='eng' className='righticons' />
+          )}
         </div>
         <div className='col-2'>
           <span className='dot dot2'>

@@ -21,6 +21,7 @@ export default class Dashboard extends React.Component {
     selectedOption: undefined,
     newfeed: [],
     percentTranscribeCompleted: 0,
+    rssFeedList: [],
   };
 
   componentDidMount() {
@@ -33,15 +34,17 @@ export default class Dashboard extends React.Component {
     this.getRss();
     this.getManual();
     this.getIsEdited();
+    this.getRssFeedList();
   }
 
   lefthandler = () => {
-    if(this.state.rss.length!==this.state.newfeed.length&&this.state.newfeed.length!==0)
-    { console.log("here")
-      this.getEpisodes()
-      this.getRss()
+    if (
+      this.state.rss.length !== this.state.newfeed.length &&
+      this.state.newfeed.length !== 0
+    ) {
+      this.getEpisodes();
+      this.getRss();
     }
-    console.log("this is prob",this.state.rss.length,this.state.newfeed.length)
     this.setState({
       left: true,
       right: false,
@@ -64,6 +67,17 @@ export default class Dashboard extends React.Component {
       },
     };
     return config;
+  };
+  getRssFeedList = async () => {
+    await bbckaldi
+      .get('/rss')
+      .then((response) => {
+        this.setState({ rssFeedList: response.data });
+      })
+      .catch((err) => {
+        console.log('could not fetch rss');
+        console.log(err);
+      });
   };
   getEpisodes = async () => {
     const episodes = await bbckaldi.get('/episode');
@@ -205,15 +219,12 @@ export default class Dashboard extends React.Component {
       uploadedID: response.data.id,
     });
   };
-  delParamWise=(param,isEdited)=>
-  { this.getEpisodes()
-    if(isEdited)
-    this.getIsEdited()
-    if(param==='Manual')
-    this.getManual()
-    if(param==='Rss')
-    this.getRss()
-  }
+  delParamWise = (param, isEdited) => {
+    this.getEpisodes();
+    if (isEdited) this.getIsEdited();
+    if (param === 'Manual') this.getManual();
+    if (param === 'Rss') this.getRss();
+  };
   handleURL = (e) => {
     this.setState({ url: e.target.value });
   };
@@ -222,6 +233,7 @@ export default class Dashboard extends React.Component {
     const { url } = this.state;
     const response = await bbckaldi.post('/feed/add', { url });
     this.setState({ newfeed: response.data });
+    this.getRssFeedList();
     this.getEpisodes();
     this.getRss();
     this.getManual();
@@ -229,7 +241,6 @@ export default class Dashboard extends React.Component {
     this.closeModal2();
   };
   adjustedRightHandler = () => {
-    
     this.setState({
       left: false,
       right: true,
@@ -370,12 +381,14 @@ export default class Dashboard extends React.Component {
           <div className='main'>
             {this.state.addfeed ? (
               <Bigmenu
-                rss={this.state.newfeed}
+                // rss={this.state.newfeed}
+                rssFeedList={this.state.rssFeedList}
                 getRSSModal={this.openModal2}
               ></Bigmenu>
             ) : (
               <Bigmenu
-                rss={this.state.rss}
+                rssFeedList={this.state.rssFeedList}
+                // rss={this.state.rss}
                 getRSSModal={this.openModal2}
               ></Bigmenu>
             )}

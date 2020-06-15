@@ -6,20 +6,21 @@ import rssAdd from '../../../images/addFeedPlus.svg';
 
 class Bigmenu extends React.Component {
   renderRss = () => {
-    if (this.props.rss) {
-      const { rss } = this.props;
+    if (this.props.rssFeedList) {
+      const { rssFeedList } = this.props;
 
-      const mappedrss = rss.map((ele, index) => {
+      const mappedrss = rssFeedList.map((ele, index) => {
         return (
           <RssEpisode
             index={index}
-            key={ele.id}
+            key={ele._id}
             title={ele.title}
-            category='Podcast Category' //pass the category when it comes from backend
-            id={ele.id}
-            published={ele.published}
-            duration={ele.duration}
-            deleteEpisode={this.deleteEpisode}
+            author={ele.author}
+            category={ele.categories.join(', ')}
+            date={ele.createdAt.split('T')[0]} 
+            language={ele.language}//pass the category when it comes from backend
+            id={ele._id}
+            deleteEpisode={this.deleteRss}
           />
         );
       });
@@ -28,17 +29,17 @@ class Bigmenu extends React.Component {
       return <h1>Loading</h1>;
     }
   };
-  deleteEpisode = async (id, index) => {
+  deleteRss = async (id, index) => {
     await bbckaldi
-      .delete('/episode/' + id)
+      .delete('/rss/' + id)
       .then((response) => {
         if (response.status === 200) {
           console.log('Episode deleted successfully');
         }
       })
       .catch((err) => console.log(err.response.data.msg));
-    this.props.rss.splice(index, 1);
-    this.setState({tab:true})
+    this.props.rssFeedList.splice(index, 1);
+    this.setState({ tab: true });
   };
 
   render() {
@@ -56,7 +57,11 @@ class Bigmenu extends React.Component {
                   this.props.getRSSModal();
                 }}
               >
-                <img src={rssAdd} alt='add' style={{ marginRight: '10px', height: '22px' }} />
+                <img
+                  src={rssAdd}
+                  alt='add'
+                  style={{ marginRight: '10px', height: '22px' }}
+                />
                 Add Feed
               </button>
             </div>
