@@ -188,6 +188,7 @@ export default class Billing extends React.Component {
               ></input>
               <input
                 placeholder='Card Number'
+                type='number'
                 name='number'
                 onChange={this.handleCardDetails}
                 value={cardDetails.number}

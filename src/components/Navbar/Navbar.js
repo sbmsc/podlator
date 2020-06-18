@@ -59,7 +59,7 @@ class Navbar extends React.Component {
     }
     console.log('status', this.props.status);
     return (
-      <nav className='navbar navbar-expand-lg navbar-light bg-light navbar1'>
+      <nav className='navbar navbar-expand-lg navbar-light bg-light navbar1 align-items-center'>
         <a className='navbar-brand' href='/'>
           <img src={navbanner} alt='logo' />
         </a>
@@ -91,27 +91,28 @@ class Navbar extends React.Component {
             </li>
             {this.props.title && !this.props.transcribeCompleted ? (
               <li className='nav-item audioTitle-container align-items-center'>
-                <span className='audioTitle align-items-center'>{this.props.title}</span>
-                <span className='transcribeStatus'>
-                  {this.props.status && this.props.status === 'true'
-                    ? 'Finished'
-                    : ''}
-                  {this.props.status && this.props.status === 'false'
-                    ? 'Failed'
-                    : ''}
+                <span className='audioTitle align-items-center'>
+                  {this.props.title}
                 </span>
+                {this.props.status ? (
+                  <span className='transcribeStatus'>
+                    {this.props.status === 'true' ? 'Finished' : 'Failed'}
+                  </span>
+                ) : null}
               </li>
             ) : null}
             {this.props.transcribeCompleted ? (
               <li className='nav-item audioTitle-container align-items-center'>
-                <span className='audioTitle align-items-center'>{this.props.title}</span>
+                <span className='audioTitle align-items-center'>
+                  {this.props.title}
+                </span>
                 <span className='transcribeStatus'>
                   {`${this.props.transcribeCompleted}%`}
                 </span>
               </li>
             ) : null}
           </ul>
-          <ul className='navbar nav'>
+          <ul className='navbar nav' style={{ minWidth: '380px' }}>
             <li className='nav-item'>
               <img
                 src={
@@ -120,7 +121,7 @@ class Navbar extends React.Component {
                     : userImg
                 }
                 alt='User Img'
-                className='rounded-circle nav-item userImg'
+                className='userImg'
               ></img>
             </li>
             <li className='nav-item'>

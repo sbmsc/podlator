@@ -6,7 +6,7 @@ class LeftMenu extends React.Component {
       <div className='box-left'>
         <div className='item'>
           <i className='fas fa-plus'></i>
-          <span>New Episode</span>
+          <span onClick={this.props.handleClick('new-ep')}>New Episode</span>
         </div>
         <div className='item'>
           <i className='far fa-edit'> </i>

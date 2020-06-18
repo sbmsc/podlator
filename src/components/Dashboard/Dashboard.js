@@ -101,11 +101,14 @@ export default class Dashboard extends React.Component {
   };
 
   handleClick = (param) => (e) => {
+    
     this.setState({
       left: true,
       right: false,
     });
-
+    if(param==='new-ep')
+    this.openUploadModal()
+    else
     this.setState({ param });
   };
 
@@ -122,7 +125,7 @@ export default class Dashboard extends React.Component {
       };
     });
   };
-  
+
   openAddFeedModal = () => {
     this.setState({
       selectedOption2: true,
@@ -136,52 +139,64 @@ export default class Dashboard extends React.Component {
       };
     });
   };
-  handleTranscribe = async (id,filename) => {
-    this.setState({ uploading: undefined ,clickedTitle:filename});
+  handleTranscribe = async (id, filename) => {
+    this.setState({ uploading: undefined, clickedTitle: filename });
     this.closeUploadModal();
-    var percentCompleted=0
+    var percentCompleted = 0;
     bbckaldi
       .get('/transcribe/' + id, {
-        onUploadProgress: (progressEvent) =>{
-           percentCompleted = Math.floor(
+        onUploadProgress: (progressEvent) => {
+          percentCompleted = Math.floor(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          console.log("Percentage Completed", progressEvent);
-          this.setState({ percentTranscribeCompleted : percentCompleted });
-        }
+          console.log('Percentage Completed', progressEvent);
+          this.setState({ percentTranscribeCompleted: percentCompleted });
+        },
       })
       .then(async (resp) => {
         clearInterval(progress);
-        this.setState({ percentTranscribeCompleted: 100 ,successTrancribe:"true"});
-        this.getEpisodes().then(()=> this.setState({percentTranscribeCompleted:null}))
-        this.getManual()
-        this.getRss()
-        this.getIsEdited()
-       
+        this.setState({
+          percentTranscribeCompleted: 100,
+          successTrancribe: 'true',
+        });
+        this.getEpisodes().then(() =>
+          this.setState({ percentTranscribeCompleted: null })
+        );
+        this.getManual();
+        this.getRss();
+        this.getIsEdited();
       })
       .catch((error) => {
         if (
           error.response &&
-          error.response.status===400 &&
+          error.response.status === 400 &&
           error.response.data.msg === 'No subscription found'
-        )
+        ) {
           alert(error.response.data.msg + '\nPlease subscribe to a plan!');
-        else {
+          clearInterval(progress);
+          this.setState({
+            successTrancribe: 'false',
+            percentTranscribeCompleted: null,
+          });
+        } else {
           alert('Something went wrong');
           clearInterval(progress);
-          this.setState({ successTrancribe:"false",percentTranscribeCompleted:null });
+          this.setState({
+            successTrancribe: 'false',
+            percentTranscribeCompleted: null,
+          });
           // window.location.reload();
         }
       });
 
-    var progress = window.setInterval(
-      () =>
-        this.setState({
-          percentTranscribeCompleted: this.state.percentTranscribeCompleted + 1,
-        }),
-      500
-    );
-    if (this.state.percentCompleted === 99) clearInterval(progress);
+    let progress = window.setInterval(() => {
+      this.setState({
+        percentTranscribeCompleted:
+          this.state.percentTranscribeCompleted < 99
+            ? this.state.percentTranscribeCompleted + 1
+            : 99,
+      });
+    }, 500);
   };
 
   handleModalMessage = () => {
@@ -198,7 +213,10 @@ export default class Dashboard extends React.Component {
       return (
         <div>
           <h1>{this.state.uploadedTitle}</h1>
-          <button className='bluebutton' onClick={()=>this.handleTranscribe(this.state.uploadedID)}>
+          <button
+            className='bluebutton'
+            onClick={() => this.handleTranscribe(this.state.uploadedID)}
+          >
             Transcribe
           </button>
         </div>
@@ -326,9 +344,15 @@ export default class Dashboard extends React.Component {
           </div>
         </Modal>
         <Navbar
-          title={this.state.uploadedTitle?this.state.uploadedTitle:this.state.clickedTitle}
+          title={
+            this.state.uploadedTitle
+              ? this.state.uploadedTitle
+              : this.state.clickedTitle
+          }
           transcribeCompleted={this.state.percentTranscribeCompleted}
-          status={this.state.successTrancribe?this.state.successTrancribe:""}
+          status={
+            this.state.successTrancribe ? this.state.successTrancribe : ''
+          }
         />
         <div className='select row'>
           <button

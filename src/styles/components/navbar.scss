@@ -3,8 +3,8 @@
   border-radius: 76px;
   opacity: 1;
   height: 120px;
-  @media screen and (max-width:990px) {
-  height: auto;    
+  @media screen and (max-width: 990px) {
+    height: auto;
   }
 }
 
@@ -18,14 +18,17 @@
 
 .navGraph {
   margin-left: 0;
-  @media screen and (max-width: 1100px) {
+  @media screen and (max-width: 1280px) {
+    width: 280px;
+  }
+  @media screen and (max-width: 1025px) {
     width: 200px;
   }
 }
 .audioImg {
   height: 75px;
   margin-left: 250px;
-  @media screen and (max-width:1281px){
+  @media screen and (max-width: 1281px) {
     margin-left: 34px;
   }
 }
@@ -36,12 +39,19 @@ p {
 .userImg {
   height: 40px;
   width: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 50%;
   overflow: hidden;
   background-size: cover;
   background-position: center;
 }
 .info {
   margin: 0 15px;
+  @media screen and (max-width: 1281px) {
+    max-width: 180px;
+  }
+  overflow: hidden;
 }
 .settings {
   height: 30px;
@@ -58,7 +68,7 @@ p {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: #88C9FF;
+  background-color: #88c9ff;
   border-radius: 32px;
   padding: 10px;
   margin-left: 10px;
@@ -76,7 +86,7 @@ p {
   }
   .transcribeStatus {
     background-color: white;
-    color: #88C9FF;
+    color: #88c9ff;
     border-radius: 20px;
     padding: 5px 10px;
     text-align: center;

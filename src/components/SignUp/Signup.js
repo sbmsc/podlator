@@ -45,22 +45,30 @@ class Signup extends React.Component {
           }
         })
         .catch((error) => {
-          this.setState({ error: 'Something went wrong' });
-          console.log(error);
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.msg
+          ) {
+            this.setState({ error: error.response.data.msg });
+          } else {
+            this.setState({ error: 'Something went wrong' });
+            console.log(error);
+          }
         });
     } else {
       this.setState({ error: 'Password and confirm password do not match' });
     }
   }
 
-  handleSignin = () =>{
+  handleSignin = () => {
     this.props.history.push('/');
-  }
+  };
   render() {
     return (
-      <div className="box-layout">
-        <form className="box">
-          <div className="error">{this.state.error}</div>
+      <div className='box-layout'>
+        <form className='box'>
+          <div className='error'>{this.state.error}</div>
           <input
             type='text'
             placeholder='First Name'
@@ -117,14 +125,12 @@ class Signup extends React.Component {
             </button>
           </div>
           <p style={{ color: '#CBCBCB' }}>
-        Already have an account? 
-        <span
-          style={{ color: '#218EE8' }}
-          onClick={this.handleSignin}
-        >
-          {' '}Login
-        </span>
-      </p>
+            Already have an account?
+            <span style={{ color: '#218EE8' }} onClick={this.handleSignin}>
+              {' '}
+              Login
+            </span>
+          </p>
         </form>
       </div>
     );

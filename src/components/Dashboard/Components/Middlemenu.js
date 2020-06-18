@@ -1,12 +1,12 @@
-import React from "react";
-import Filter from "./Filter";
-import Episode from "./Episode";
-import bbckaldi from "../../../apis/bbckaldi";
-import Modal from "react-modal";
-import volume from "../../../images/volume.svg";
-import edit from "../../../images/edit.svg";
-import transcribeImg from "../../../images/transcribe.svg";
-import { Link } from "react-router-dom";
+import React from 'react';
+import Filter from './Filter';
+import Episode from './Episode';
+import bbckaldi from '../../../apis/bbckaldi';
+import Modal from 'react-modal';
+import volume from '../../../images/volume.svg';
+import edit from '../../../images/edit.svg';
+import transcribeImg from '../../../images/transcribe.svg';
+import { Link } from 'react-router-dom';
 class Middlemenu extends React.Component {
   state = {
     transcribeFile: false,
@@ -57,18 +57,18 @@ class Middlemenu extends React.Component {
       this.closeTranscribeModal();
     }
     await bbckaldi
-      .get("/transcribe/" + id)
+      .get('/transcribe/' + id)
       .then((response) => console.log(response))
       .catch((error) => {
-        console.log("Something went wrong while transcribing");
+        console.log('Something went wrong while transcribing');
       });
   };
   deleteEpisode = async (id, index, source, isEdited) => {
     await bbckaldi
-      .delete("/episode/" + id)
+      .delete('/episode/' + id)
       .then((response) => {
         if (response.status === 200) {
-          console.log("Episode deleted successfully");
+          console.log('Episode deleted successfully');
         }
       })
       .catch((err) => console.log(err.response.data.msg));
@@ -83,21 +83,21 @@ class Middlemenu extends React.Component {
         <Modal
           isOpen={this.state.transcribeFile}
           onRequestClose={this.closeTranscribeModal}
-          contentLabel="sometext"
+          contentLabel='sometext'
           closeTimeoutMS={200}
           ariaHideApp={false}
-          className="uploadModal"
+          className='uploadModal'
           style={{
             overlay: {
-              backgroundColor: "rgb(33,142,232,0.9)",
+              backgroundColor: 'rgb(33,142,232,0.9)',
             },
           }}
         >
-          <div className="loadTranscribeModal">
-            <img src={volume} alt="volume" style={{ margin: "15px" }} />
-            <h2>{this.state.props ? this.state.props.title : ""}</h2>
+          <div className='loadTranscribeModal'>
+            <img src={volume} alt='volume' style={{ margin: '15px' }} />
+            <h2>{this.state.props ? this.state.props.title : ''}</h2>
             {this.state.props && this.state.props.isTranscribed ? (
-              <div style={{ width: "100%", textAlign: "center" }}>
+              <div style={{ width: '100%', textAlign: 'center' }}>
                 <span>
                   There is already a transcript available for this episode.
                   <br />
@@ -106,44 +106,43 @@ class Middlemenu extends React.Component {
                 <br />
                 <span
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
+                    display: 'flex',
+                    justifyContent: 'space-between',
                   }}
                 >
-                  {" "}
+                  {' '}
                   <Link
+                    className='bluebutton align-items-center'
                     to={{
-                      pathname: "/transcriber",
+                      pathname: '/transcriber',
                       id: this.state.props.id,
-                      rss: this.state.props.source === "Rss" ? true : false,
+                      rss: this.state.props.source === 'Rss' ? true : false,
                       title: this.state.props.title,
                     }}
                   >
-                    <button
-                      className="bluebutton align-items-center"
-                      onClick={this.handleLoad}
-                    >
-                      Load Transcript
-                      <img src={edit} alt="load" />
-                    </button>
+                    Load Transcript
+                    <img src={edit} alt='load' />
                   </Link>
                   <button
-                    className="bluebutton align-items-center"
+                    className='bluebutton align-items-center'
                     onClick={() => {
                       this.closeTranscribeModal();
-                      this.props.handleTranscribe(this.state.props.id,this.state.props.title);
+                      this.props.handleTranscribe(
+                        this.state.props.id,
+                        this.state.props.title
+                      );
                     }}
                   >
                     Transcribe Again
-                    <img src={transcribeImg} height="35px" alt="transcribe" />
+                    <img src={transcribeImg} height='35px' alt='transcribe' />
                   </button>
                 </span>
               </div>
             ) : (
               <div
                 style={{
-                  width: "100%",
-                  textAlign: "center",
+                  width: '100%',
+                  textAlign: 'center',
                 }}
               >
                 <span>
@@ -152,21 +151,24 @@ class Middlemenu extends React.Component {
                   <br /> You will get a notification when transcription is done.
                 </span>
                 <button
-                  className="bluebutton align-items-center"
+                  className='bluebutton align-items-center'
                   onClick={() => {
                     this.closeTranscribeModal();
-                    this.props.handleTranscribe(this.state.props.id,this.state.props.title);
+                    this.props.handleTranscribe(
+                      this.state.props.id,
+                      this.state.props.title
+                    );
                   }}
                 >
                   Transcribe
-                  <img src={transcribeImg} height="35px" alt="transcribe" />
+                  <img src={transcribeImg} height='35px' alt='transcribe' />
                 </button>
               </div>
             )}
           </div>
         </Modal>
-        <div className="box-middle">
-          <div className="box-middle-content">
+        <div className='box-middle'>
+          <div className='box-middle-content'>
             <Filter />
             {this.renderEpisodes()}
           </div>
