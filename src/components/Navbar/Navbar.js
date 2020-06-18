@@ -57,7 +57,7 @@ class Navbar extends React.Component {
       localStorage.setItem('img', image);
       if (this.props.imgDel) this.props.imgDel();
     }
-
+    console.log('status', this.props.status);
     return (
       <nav className='navbar navbar-expand-lg navbar-light bg-light navbar1'>
         <a className='navbar-brand' href='/'>
@@ -89,23 +89,33 @@ class Navbar extends React.Component {
                 <img src={navGraph} alt='graph' className='navGraph'></img>
               )}
             </li>
-            {this.props.title ? (
-              <li className='nav-item audioTitle-container'>
-                <h2 className='audioTitle'>{this.props.title}</h2>
+            {this.props.title && !this.props.transcribeCompleted ? (
+              <li className='nav-item audioTitle-container align-items-center'>
+                <span className='audioTitle align-items-center'>{this.props.title}</span>
+                <span className='transcribeStatus'>
+                  {this.props.status && this.props.status === 'true'
+                    ? 'Finished'
+                    : ''}
+                  {this.props.status && this.props.status === 'false'
+                    ? 'Failed'
+                    : ''}
+                </span>
               </li>
             ) : null}
-            {/* {this.props.transcribeCompleted ? (
-              <li className='nav-item percenttranscribecompleted'>
-                 <h2 className='audioTitle'>{this.props.title}</h2>
-                {this.props.transcribeCompleted} %
+            {this.props.transcribeCompleted ? (
+              <li className='nav-item audioTitle-container align-items-center'>
+                <span className='audioTitle align-items-center'>{this.props.title}</span>
+                <span className='transcribeStatus'>
+                  {`${this.props.transcribeCompleted}%`}
+                </span>
               </li>
-            ) : null} */}
+            ) : null}
           </ul>
           <ul className='navbar nav'>
             <li className='nav-item'>
               <img
                 src={
-                  localStorage.getItem('img')
+                  localStorage.getItem('img') !== null
                     ? localStorage.getItem('img')
                     : userImg
                 }

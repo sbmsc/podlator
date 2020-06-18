@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import edit from '../../../images/edit.svg';
-import edited from '../../../images/edited.svg';
+// import { Link } from "react-router-dom";
+import loadTranscript from '../../../images/edit.svg';
+import transcribe from '../../../images/edited.svg';
 import rss from '../../../images/rss.svg';
 import wav from '../../../images/wav.svg';
 import epTick from '../../../images/epTick.svg';
@@ -25,31 +25,13 @@ const Episode = (props) => {
           )}
         </div>
         <div className='col-6 title'>
-          {props.rss === 'Rss' ? (
-            <Link
-              to={{
-                pathname: '/transcriber',
-                id: props.id,
-                rss: true,
-                title: props.title,
-              }}
-            >
-              {' '}
-              <h3>{props.title}</h3>
-            </Link>
-          ) : (
-            <Link
-              to={{
-                pathname: '/transcriber',
-                id: props.id,
-                rss: false,
-                title: props.title,
-              }}
-            >
-              {' '}
-              <h3>{props.title}</h3>
-            </Link>
-          )}
+          {' '}
+          <h3
+            onClick={() => props.openTranscribeModal(props)}
+            style={{ cursor: 'pointer' }}
+          >
+            {props.title}
+          </h3>
         </div>
         <div className='col-1'>
           <p className='duration'>{ret}</p>
@@ -63,12 +45,24 @@ const Episode = (props) => {
             )}
           </span>
         </div>
+
         <div className='col-1'>
-          <span className='dot dot2'>
-            {props.isEdited ? (
-              <img src={edited} alt='Edited' className='righticons' />
+          <span
+            className='dot dot2'
+            onClick={() => props.openTranscribeModal(props)}
+          >
+            {props.isTranscribed ? (
+              <img
+                src={loadTranscript}
+                alt='Transcribed'
+                className='righticons'
+              />
             ) : (
-              <img src={edit} alt='Edit' className='righticons' />
+              <img
+                src={transcribe}
+                alt='Not Transcribed'
+                className='righticons'
+              />
             )}
           </span>
         </div>

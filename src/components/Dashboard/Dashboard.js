@@ -109,57 +109,68 @@ export default class Dashboard extends React.Component {
     this.setState({ param });
   };
 
-  openModal = () => {
+  openUploadModal = () => {
     this.setState({
       selectedOption: true,
     });
   };
 
-  closeModal = () => {
+  closeUploadModal = () => {
     this.setState(() => {
       return {
         selectedOption: undefined,
       };
     });
   };
-  openModal2 = () => {
+  
+  openAddFeedModal = () => {
     this.setState({
       selectedOption2: true,
     });
   };
 
-  closeModal2 = () => {
+  closeAddFeedModal = () => {
     this.setState(() => {
       return {
         selectedOption2: undefined,
       };
     });
   };
-  handleTranscribe = async () => {
-    this.setState({ uploading: undefined });
-    this.closeModal();
-
+  handleTranscribe = async (id,filename) => {
+    this.setState({ uploading: undefined ,clickedTitle:filename});
+    this.closeUploadModal();
+    var percentCompleted=0
     bbckaldi
-      .get('/transcribe/' + this.state.uploadedID, {
-        // onUploadProgress: (progressEvent) =>{
-        //   let percentCompleted = Math.floor(
-        //     (progressEvent.loaded * 100) / progressEvent.total
-        //   );
-        //   console.log("Percentage Completed", progressEvent);
-        //   this.setState({ percentTranscribeCompleted : percentCompleted });
-        // }
+      .get('/transcribe/' + id, {
+        onUploadProgress: (progressEvent) =>{
+           percentCompleted = Math.floor(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log("Percentage Completed", progressEvent);
+          this.setState({ percentTranscribeCompleted : percentCompleted });
+        }
       })
-      .then((resp) => {
+      .then(async (resp) => {
         clearInterval(progress);
-        this.setState({ percentTranscribeCompleted: 100 });
-        window.location.reload();
+        this.setState({ percentTranscribeCompleted: 100 ,successTrancribe:"true"});
+        this.getEpisodes().then(()=> this.setState({percentTranscribeCompleted:null}))
+        this.getManual()
+        this.getRss()
+        this.getIsEdited()
+       
       })
       .catch((error) => {
-        if (error.response.data.msg === 'No subscription found')
+        if (
+          error.response &&
+          error.response.status===400 &&
+          error.response.data.msg === 'No subscription found'
+        )
           alert(error.response.data.msg + '\nPlease subscribe to a plan!');
         else {
           alert('Something went wrong');
-          window.location.reload();
+          clearInterval(progress);
+          this.setState({ successTrancribe:"false",percentTranscribeCompleted:null });
+          // window.location.reload();
         }
       });
 
@@ -187,7 +198,7 @@ export default class Dashboard extends React.Component {
       return (
         <div>
           <h1>{this.state.uploadedTitle}</h1>
-          <button className='bluebutton' onClick={this.handleTranscribe}>
+          <button className='bluebutton' onClick={()=>this.handleTranscribe(this.state.uploadedID)}>
             Transcribe
           </button>
         </div>
@@ -238,7 +249,7 @@ export default class Dashboard extends React.Component {
     this.getRss();
     this.getManual();
     this.getIsEdited();
-    this.closeModal2();
+    this.closeAddFeedModal();
   };
   adjustedRightHandler = () => {
     this.setState({
@@ -253,7 +264,7 @@ export default class Dashboard extends React.Component {
       <div className='dashboard'>
         <Modal
           isOpen={this.state.selectedOption}
-          onRequestClose={this.closeModal}
+          onRequestClose={this.closeUploadModal}
           contentLabel='sometext'
           closeTimeoutMS={200}
           ariaHideApp={false}
@@ -290,7 +301,7 @@ export default class Dashboard extends React.Component {
         </Modal>
         <Modal
           isOpen={this.state.selectedOption2}
-          onRequestClose={this.closeModal2}
+          onRequestClose={this.closeAddFeedModal}
           contentLabel='sometext'
           closeTimeoutMS={200}
           ariaHideApp={false}
@@ -315,8 +326,9 @@ export default class Dashboard extends React.Component {
           </div>
         </Modal>
         <Navbar
-          title={this.state.uploadedTitle}
+          title={this.state.uploadedTitle?this.state.uploadedTitle:this.state.clickedTitle}
           transcribeCompleted={this.state.percentTranscribeCompleted}
+          status={this.state.successTrancribe?this.state.successTrancribe:""}
         />
         <div className='select row'>
           <button
@@ -371,10 +383,11 @@ export default class Dashboard extends React.Component {
                 }
                 type={this.state.param}
                 delParamWise={this.delParamWise}
+                handleTranscribe={this.handleTranscribe}
               />
             </div>
             <div className='col-md-2'>
-              <Rightbutton clicked={this.openModal} />
+              <Rightbutton clicked={this.openUploadModal} />
             </div>
           </div>
         ) : (
@@ -383,13 +396,13 @@ export default class Dashboard extends React.Component {
               <Bigmenu
                 // rss={this.state.newfeed}
                 rssFeedList={this.state.rssFeedList}
-                getRSSModal={this.openModal2}
+                getRSSModal={this.openAddFeedModal}
               ></Bigmenu>
             ) : (
               <Bigmenu
                 rssFeedList={this.state.rssFeedList}
                 // rss={this.state.rss}
-                getRSSModal={this.openModal2}
+                getRSSModal={this.openAddFeedModal}
               ></Bigmenu>
             )}
           </div>

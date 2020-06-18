@@ -1,34 +1,45 @@
-.notes{
-    margin: 15px 0;
-    height: 60vh;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 5px 13px 18px #218EE821;
-    border-radius: 41px;
-    opacity: 1;
-    padding: 20px $l-size 0 $l-size;
+.notes {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  height: 60vh;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 5px 13px 18px #218ee821;
+  border-radius: 41px;
+  opacity: 1;
+  padding: 20px $l-size 0 $l-size;
+  .bluebutton {
+    margin: 10px auto;
+    width: 200px;
+    height: 35px;
+  }
 }
-.notesTitle{
-    text-align: center;
-    font-size: large;
-    font-weight: 300;
-    color: black;
-    margin: 20px auto;
+.notesTitle {
+  text-align: center;
+  font-size: large;
+  font-weight: 300;
+  color: black;
+  margin: 0 auto;
 }
-.notesTitle img{
-    margin: 10px;
+.notesTitle img {
+  margin: 10px;
 }
-.fa-thumbtack{
-    color: $primary-color;
+.fa-thumbtack {
+  color: $primary-color;
 }
 
 .col-md-3 {
-   padding: 0;
+  padding: 0;
 }
 
-.notesedit{
-    height: 80%;
-    width: 100%;
-    background: #F1F6F9 0% 0% no-repeat padding-box;
-    border-radius: 24px;
-    opacity: 0.59;
+.notesedit {
+  height: 75%;
+  width: 100%;
+  background: #f1f6f9 0% 0% no-repeat padding-box;
+  border-radius: 24px;
+  padding: 10px;
+  margin: 0;
+  overflow: visible;
+  display: block;
+  border: 1px solid lightblue;
 }

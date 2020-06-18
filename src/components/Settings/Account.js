@@ -328,8 +328,8 @@ export default class Account extends React.Component {
                   : 'select Language'
               }
             >
-              <option value='en'>English</option>
-              <option value='fr'>French</option>
+              <option value='English'>English</option>
+              <option value='French'>French</option>
             </select>
           </div>
           <div className='col-md-6 row'>

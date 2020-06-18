@@ -53,16 +53,35 @@ p {
   height: 30px;
   width: 30px;
 }
-.audioTitle {
-  margin: 0 auto;
-}
-.audioTitle-container {
-  background-color: #E3F3FF;
-  border-radius: 20px;
-  padding: 20px;
-  margin-left: 20px;
-}
 
-.percenttranscribecompleted{
-  color: black;
+.audioTitle-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #88C9FF;
+  border-radius: 32px;
+  padding: 10px;
+  margin-left: 10px;
+  color: white;
+  max-width: 800px;
+  @media screen and (max-width: 1280px) {
+    width: 200px;
+  }
+  height: 65px;
+  .audioTitle {
+    margin: 0 auto;
+    white-space: nowrap;
+    font-size: 20px;
+    overflow: hidden;
+  }
+  .transcribeStatus {
+    background-color: white;
+    color: #88C9FF;
+    border-radius: 20px;
+    padding: 5px 10px;
+    text-align: center;
+    height: 40px;
+    font-size: 20px;
+    margin-left: 10px;
+  }
 }
