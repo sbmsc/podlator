@@ -113,7 +113,7 @@ export default class Account extends React.Component {
       this.state.newPassword === this.state.confirmPassword
     ) {
       await bbckaldi
-        .put('/user', { password: this.state.newPassword })
+        .put('/user/password', { password: this.state.newPassword })
         .then((response) => {
           alert('password changed successfully');
           this.closeModal();

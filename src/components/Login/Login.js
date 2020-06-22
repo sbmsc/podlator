@@ -57,6 +57,9 @@ class Login extends React.Component {
   handleSignup = () => {
     this.props.history.push('/signup');
   };
+  handleReset = () => {
+    this.props.history.push('/forgot_password');
+  };
 
   // token=window.location.search.split("?token=")[1];
   gmailHandler = () => {
@@ -126,6 +129,15 @@ class Login extends React.Component {
                     onClick={this.handleSignup}
                   >
                     Create your account
+                  </span>
+                </p>
+                <p style={{ marginTop: 10, color: '#CBCBCB' }}>
+                  Forgot yor Password?
+                  <span
+                    style={{ color: '#218EE8' }}
+                    onClick={this.handleReset}
+                  >
+                    Reset Here
                   </span>
                 </p>
               </div>

@@ -11,6 +11,8 @@ import Payment from '../components/SignUp/Payment';
 import Transcriber from '../components/TranscriptPlayer/Transcriber';
 import Settings from '../components/Settings/Settings';
 import Loader from '../components/SignUp/Redirecter';
+import ForgotPassword from '../components/ResetPassword/ForgotPassword';
+import ResetPassword from '../components/ResetPassword/ResetPassword';
 
 const routes = (
   <Router>
@@ -24,6 +26,8 @@ const routes = (
         <PrivateRoute path='/transcript' component={Transcript} />
         <PrivateRoute path='/settings' component={Settings} />
         <PublicRoute path="/auth/google/callback" component={Loader}/>
+        <PublicRoute path='/forgot_password' component={ForgotPassword} />
+        <PublicRoute path='/reset' component={ResetPassword} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

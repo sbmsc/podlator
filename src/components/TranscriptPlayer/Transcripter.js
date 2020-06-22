@@ -22,19 +22,21 @@ class Transcript extends React.Component {
     inline: true,
     redirect: false,
     notes: "Create notes here",
+    speakerList: [],
+    downloads: "docx",
   };
 
   componentDidMount = async () => {
-    document.addEventListener("selectionchange", () => {
-      const lol = document.getSelection().anchorNode.parentElement;
-      const str = lol.id + "st";
-      console.log(lol);
-      if (this.state[str]) {
-        const audio = document.getElementById("audiofile");
+    // document.addEventListener("selectionchange", () => {
+    //   const lol = document.getSelection().anchorNode.parentElement;
+    //   const str = lol.id + "st";
+    //   console.log(lol);
+    //   if (this.state[str]) {
+    //     const audio = document.getElementById("audiofile");
 
-        audio.currentTime = this.state[str];
-      }
-    });
+    //     audio.currentTime = this.state[str];
+    //   }
+    // });
     const { id, rss } = this.props;
     if (id) {
       localStorage.setItem("t_id", id);
@@ -91,17 +93,15 @@ class Transcript extends React.Component {
             ? { data: { url: response.data.url } }
             : { data: { url: "" } };
       if (!response) response = { data: { transcription: [] } };
-      await this.setState({
+
+       this.setState({
         transcript: response.data.transcription,
         src: getUrl.data.url,
         notes: response.data.notes,
-      });
-    }
-
-    if (id) localStorage.setItem("t_id", id);
-
-    if (response.data.transcription) {
-      response.data.transcription.forEach((result, arrkey) =>
+      },()=>
+      {
+        response.data.transcription.forEach((result, arrkey) =>
+      {
         result.words.forEach((ele, key) => {
           const str = arrkey + "" + key;
           const str2 = arrkey + "" + key + "i";
@@ -111,8 +111,20 @@ class Transcript extends React.Component {
             [str]: ele.word,
             [str3]: ele.start,
           });
+         
         })
+        const { speakerList } = this.state;
+        speakerList[arrkey] = result.speaker;
+        this.setState({ speakerList });
+      }
       );
+      })
+    }
+
+    if (id) localStorage.setItem("t_id", id);
+
+    if (response.data.transcription) {
+      
     } else {
       alert("Transcript could not be fetched for this audio");
       this.setState({ redirect: true });
@@ -122,53 +134,90 @@ class Transcript extends React.Component {
     return Utils.secondsToStandard(Math.floor(input));
   };
 
-  exportData = () => {
+  exportData = (type) => {
     const { exportSpeaker, exportTimestamp } = this.state;
-    console.log("Spaker", exportSpeaker);
-    console.log("timestamp", exportTimestamp);
-    let doc = new Document();
-    let children = [];
+    if (type === "docx") {
+      console.log("Spaker", exportSpeaker);
+      console.log("timestamp", exportTimestamp);
+      let doc = new Document();
+      let children = [];
 
-    this.state.transcript.forEach((e) => {
-      let child = [];
-      if (exportSpeaker) {
+      this.state.transcript.forEach((e) => {
+        let child = [];
+        if (exportSpeaker) {
+          child.push(
+            new TextRun({
+              text: e.speaker,
+              bold: true,
+            })
+          );
+        }
+        if (exportTimestamp) {
+          const text = " (" + this.getTimestamp(e.words[0].start) + ") - ";
+          child.push(
+            new TextRun({
+              text,
+              bold: true,
+            })
+          );
+        }
         child.push(
           new TextRun({
-            text: e.speaker,
-            bold: true,
+            text: e.text,
           })
         );
-      }
-      if (exportTimestamp) {
-        const text = " (" + this.getTimestamp(e.words[0].start) + ") - ";
-        child.push(
-          new TextRun({
-            text,
-            bold: true,
+        children.push(
+          new Paragraph({
+            children: child,
+            spacing: {
+              after: 200,
+            },
           })
         );
-      }
-      child.push(
-        new TextRun({
-          text: e.text,
-        })
-      );
-      children.push(
-        new Paragraph({
-          children: child,
-          spacing: {
-            after: 200,
-          },
-        })
-      );
-    });
-    doc.addSection({
-      children,
-    });
-    console.log(children);
-    Packer.toBlob(doc).then((blob) => {
-      fileSaver.saveAs(blob, this.state.title + ".docx");
-    });
+      });
+      doc.addSection({
+        children,
+      });
+      console.log(children);
+      Packer.toBlob(doc).then((blob) => {
+        fileSaver.saveAs(blob, this.state.title + ".docx");
+      });
+    } else {
+      let exportString = "";
+
+      this.state.transcript.forEach((ele) => {
+        if (exportSpeaker && exportTimestamp) {
+          exportString =
+            exportString +
+            ele.speaker +
+            " (" +
+            this.getTimestamp(ele.words[0].start) +
+            ") - " +
+            ele.text +
+            "\n";
+        } else if (exportTimestamp) {
+          exportString =
+            exportString +
+            " (" +
+            this.getTimestamp(ele.words[0].start) +
+            ") - " +
+            ele.text +
+            "\n";
+        } else {
+          exportString = exportString + ele.speaker + ele.text + "\n";
+        }
+      });
+
+      console.log("export", exportString);
+      const file = new Blob([exportString], { type: "text/plain" });
+      fileSaver.saveAs(file, this.state.title + ".txt");
+    }
+  };
+
+  handleSpeakerInput = (val, key) => {
+    const { speakerList } = this.state;
+    speakerList[key] = val;
+    this.setState({ speakerList });
   };
 
   handleSubmit = async (e) => {
@@ -363,24 +412,31 @@ class Transcript extends React.Component {
       });
     });
   };
-  handleSpeaker = (val, key) => {
+  handleSpeaker = async (val, key) => {
     console.log("value here is", val, key);
-    const { transcript } = this.state;
-    transcript[key].speaker = val;
-    this.setState({ transcript });
+    let { transcript, speakerList } = this.state;
+    const findSpeaker = transcript[key].speaker;
+    transcript.forEach((ele, key) => {
+      if (ele.speaker === findSpeaker) {
+        ele.speaker = val;
+        speakerList[key] = val;
+      }
+    });
+    await this.setState({ transcript, speakerList });
   };
   mapEverything = () => {
     const { transcript } = this.state;
     const mapped = transcript.map((ele, key) => {
-      console.log(key, "sent here");
+     
       return (
         <div className="dialogue row" key={key}>
           <div className="left-text col-2">
             <SpeakerNo
-              speaker={ele.speaker}
+              speaker={this.state.speakerList[key]}
               startTime={ele.words[0].start}
               key1={key}
               handleSpeaker={this.handleSpeaker}
+              handleSpeakerInput={this.handleSpeakerInput}
             />
           </div>
           <div className="transcribed-data col-10">
@@ -409,6 +465,9 @@ class Transcript extends React.Component {
   extractOptions = async (event) => {
     event.persist();
     await this.setState({ [event.target.value]: event.target.checked });
+  };
+  extractType = async (event) => {
+    await this.setState({ downloads: event.target.value });
   };
   exportFormatHandler = (event) => {
     console.log(event);
@@ -500,7 +559,10 @@ class Transcript extends React.Component {
                 File Type <hr />
               </div>
               <div className="docType">
-                <span>Microsoft Document (docx)</span>
+                <select name="downloads" id='selectLang' onChange={this.extractType}>
+                  <option value="docx">Microsoft Word Document (.docx)</option>
+                  <option value="txt">Text File (.txt)</option>
+                </select>
               </div>
               <div className="exportModal-subtitle">
                 Export Options <hr />
@@ -550,7 +612,7 @@ class Transcript extends React.Component {
               <button
                 className="bluebutton"
                 style={{ margin: " 0 auto" }}
-                onClick={this.exportData}
+                onClick={() => this.exportData(this.state.downloads)}
               >
                 Export
               </button>

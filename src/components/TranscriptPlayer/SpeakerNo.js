@@ -5,18 +5,25 @@ class SpeakerNo extends React.Component {
     inp: false,
     speaker: this.props.speaker,
   };
-
+  constructor(props)
+  { super(props)
+    this.setState({speaker: this.props.speaker})
+  }
+  componentDidMount=()=>
+  {
+    this.setState({speaker: this.props.speaker})
+  }
   handleBlur = () => {
-    console.log(this.props, 'props');
-    this.props.handleSpeaker(this.state.speaker, this.props.key1);
-    this.setState({ inp: false });
+    
+    this.props.handleSpeaker(this.props.speaker, this.props.key1);
+    this.setState({ inp: false ,speaker:""});
   };
   render() {
     let ret = '';
     if (this.props.startTime) {
       ret = Utils.secondsToStandard(Math.floor(this.props.startTime));
     }
-    console.log('inp', this.props.key1);
+
     return (
       <div className="speakerContainer">
         {!this.state.inp ? (
@@ -25,8 +32,8 @@ class SpeakerNo extends React.Component {
           </h2>
         ) : (
           <input
-            value={this.state.speaker}
-            onChange={(e) => this.setState({ speaker: e.target.value })}
+            value={this.props.speaker}
+            onChange={(e) => this.props.handleSpeakerInput(e.target.value,this.props.key1)}
             onBlur={(e) => this.handleBlur}
             className='speakerName'
             onKeyUp={(e) => {
