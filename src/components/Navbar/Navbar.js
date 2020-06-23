@@ -25,8 +25,8 @@ class Navbar extends React.Component {
     this.getUser();
   };
 
-  getUser = async () => {
-    await bbckaldi
+  getUser = () => {
+    bbckaldi
       .get('/user')
       .then((resp) => {
         if (resp.data.avatarUrl)

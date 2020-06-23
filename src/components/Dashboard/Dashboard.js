@@ -68,8 +68,8 @@ export default class Dashboard extends React.Component {
     };
     return config;
   };
-  getRssFeedList = async () => {
-    await bbckaldi
+  getRssFeedList = () => {
+    bbckaldi
       .get('/rss')
       .then((response) => {
         this.setState({ rssFeedList: response.data });
@@ -79,37 +79,42 @@ export default class Dashboard extends React.Component {
         console.log(err);
       });
   };
-  getEpisodes = async () => {
-    const episodes = await bbckaldi.get('/episode');
-    this.setState({ episodes: episodes.data });
+  getEpisodes = () => {
+    bbckaldi
+      .get('/episode')
+      .then((response) => this.setState({ episodes: response.data }));
   };
-  getRss = async () => {
-    const rss = await bbckaldi.get('/episode', { params: { source: 'Rss' } });
-    this.setState({ rss: rss.data });
+  getRss = () => {
+    bbckaldi
+      .get('/episode', { params: { source: 'Rss' } })
+      .then((response) => this.setState({ rss: response.data }));
   };
-  getManual = async () => {
-    const manual = await bbckaldi.get('/episode', {
-      params: { source: 'Manual' },
-    });
-    this.setState({ manual: manual.data });
+  getManual = () => {
+    bbckaldi
+      .get('/episode', {
+        params: { source: 'Manual' },
+      })
+      .then((response) => {
+        this.setState({ manual: response.data });
+      });
   };
-  getIsEdited = async () => {
-    const isEdited = await bbckaldi.get('/episode', {
-      params: { isEdited: true },
-    });
-    this.setState({ isEdited: isEdited.data });
+  getIsEdited = () => {
+    bbckaldi
+      .get('/episode', {
+        params: { isEdited: true },
+      })
+      .then((response) => {
+        this.setState({ isEdited: response.data });
+      });
   };
 
   handleClick = (param) => (e) => {
-    
     this.setState({
       left: true,
       right: false,
     });
-    if(param==='new-ep')
-    this.openUploadModal()
-    else
-    this.setState({ param });
+    if (param === 'new-ep') this.openUploadModal();
+    else this.setState({ param });
   };
 
   openUploadModal = () => {

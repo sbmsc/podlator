@@ -1,26 +1,24 @@
-import React from "react";
-import kaldi from "../../apis/bbckaldi";
-import logo from "../../images/logo.png";
-import Validation from "../../utils/validation";
+import React from 'react';
+import kaldi from '../../apis/bbckaldi';
+import logo from '../../images/logo.png';
+import Validation from '../../utils/validation';
 class ResetPassword extends React.Component {
   state = {
-    username: "",
-    password: "",
-    error: "",
+    username: '',
+    password: '',
+    error: '',
     loading: false,
   };
- 
 
   async handleSubmit() {
     if (!Validation.validateEmail(this.state.username)) {
-      this.setState({ error: "Invalid Email", loading: false });
+      this.setState({ error: 'Invalid Email', loading: false });
     } else {
-      
-      var data = {
+      let data = {
         email: this.state.username,
       };
       await kaldi
-        .post("/reset_password", data)
+        .post('/reset_password', data)
         .then((response) => {
           if (response.status === 200) {
             this.setState({ loading: true });
@@ -29,7 +27,9 @@ class ResetPassword extends React.Component {
         })
         .catch((error) => {
           this.setState({
-            error: "user not found",
+            error: error.response.data.msg
+              ? error.response.data.msg
+              : 'Something went wrong',
             loading: false,
           });
           console.log(error);
@@ -39,28 +39,37 @@ class ResetPassword extends React.Component {
   }
 
   handleSignup = () => {
-    this.props.history.push("/signup");
+    this.props.history.push('/signup');
   };
 
   render() {
     return (
       <div>
         {this.state.loading === true ? (
-          <center>
-            <h1>A password reset email has been sent to your account</h1>
-          </center>
+          <div className='box-layout'>
+            <div
+              className='box'
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <h1>A password reset email has been sent to your account</h1>
+            </div>
+          </div>
         ) : (
-          <div className="box-layout">
-            <div className="box">
+          <div className='box-layout'>
+            <div className='box'>
               <form>
-                <div className="logo">
-                  <img src={logo} alt="logo" height="140px" width="150px" />
+                <div className='logo'>
+                  <img src={logo} alt='logo' height='140px' width='150px' />
                 </div>
-                <div className="error">{this.state.error}</div>
+                <div className='error'>{this.state.error}</div>
                 <input
-                  type="text"
-                  placeholder="Email"
-                  name="username"
+                  type='text'
+                  placeholder='Email'
+                  name='username'
                   onChange={(event) => {
                     this.setState({ username: event.target.value });
                   }}
@@ -68,9 +77,9 @@ class ResetPassword extends React.Component {
 
                 <div>
                   <button
-                    className="bluebutton"
-                    type="submit"
-                    title="Sign In"
+                    className='bluebutton'
+                    type='submit'
+                    title='Sign In'
                     onClick={(e) => {
                       e.preventDefault();
                       this.handleSubmit();
@@ -81,10 +90,10 @@ class ResetPassword extends React.Component {
                 </div>
               </form>
               <div>
-                <p style={{ marginTop: 40, color: "#CBCBCB" }}>
+                <p style={{ marginTop: 40, color: '#CBCBCB' }}>
                   Don't have an account?
                   <span
-                    style={{ color: "#218EE8" }}
+                    style={{ color: '#218EE8' }}
                     onClick={this.handleSignup}
                   >
                     Create your account

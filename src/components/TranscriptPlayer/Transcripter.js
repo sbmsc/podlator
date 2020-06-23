@@ -65,12 +65,34 @@ class Transcript extends React.Component {
             alert("something went wrong with server");
             this.setState({ redirect: true });
           });
-      await this.setState({
-        transcript: response.data.transcription,
-        notes: response.data.notes,
-        src: response.data.url,
-        title: response.data.title,
-      });
+      await this.setState(
+        {
+          transcript: response.data.transcription,
+          notes: response.data.notes,
+          src: response.data.url,
+          title: response.data.title,
+        },
+        () => {
+         
+          response.data.transcription.forEach((result, arrkey) => {
+            result.words.forEach((ele, key) => {
+              const str = arrkey + "" + key;
+              const str2 = arrkey + "" + key + "i";
+              const str3 = arrkey + "" + key + "st";
+              this.setState(
+                {
+                  [str2]: ele.word,
+                  [str]: ele.word,
+                  [str3]: ele.start,
+                }
+              );
+            });
+            const { speakerList } = this.state;
+            speakerList[arrkey] = result.speaker;
+            this.setState({ speakerList });
+          });
+        }
+      );
     } else {
       response = await bbckaldi.get("/episode/" + t_id).catch((err) => {
         alert("Server was unable to transcribe the given file");
@@ -94,37 +116,38 @@ class Transcript extends React.Component {
             : { data: { url: "" } };
       if (!response) response = { data: { transcription: [] } };
 
-       this.setState({
-        transcript: response.data.transcription,
-        src: getUrl.data.url,
-        notes: response.data.notes,
-      },()=>
-      {
-        response.data.transcription.forEach((result, arrkey) =>
-      {
-        result.words.forEach((ele, key) => {
-          const str = arrkey + "" + key;
-          const str2 = arrkey + "" + key + "i";
-          const str3 = arrkey + "" + key + "st";
-          this.setState({
-            [str2]: ele.word,
-            [str]: ele.word,
-            [str3]: ele.start,
-          });
+      this.setState(
+        {
+          transcript: response.data.transcription,
+          src: getUrl.data.url,
+          notes: response.data.notes,
+        },
+        () => {
          
-        })
-        const { speakerList } = this.state;
-        speakerList[arrkey] = result.speaker;
-        this.setState({ speakerList });
-      }
+          response.data.transcription.forEach((result, arrkey) => {
+            result.words.forEach((ele, key) => {
+              const str = arrkey + "" + key;
+              const str2 = arrkey + "" + key + "i";
+              const str3 = arrkey + "" + key + "st";
+              this.setState(
+                {
+                  [str2]: ele.word,
+                  [str]: ele.word,
+                  [str3]: ele.start,
+                }
+              );
+            });
+            const { speakerList } = this.state;
+            speakerList[arrkey] = result.speaker;
+            this.setState({ speakerList });
+          });
+        }
       );
-      })
     }
 
     if (id) localStorage.setItem("t_id", id);
 
     if (response.data.transcription) {
-      
     } else {
       alert("Transcript could not be fetched for this audio");
       this.setState({ redirect: true });
@@ -137,8 +160,7 @@ class Transcript extends React.Component {
   exportData = (type) => {
     const { exportSpeaker, exportTimestamp } = this.state;
     if (type === "docx") {
-      console.log("Spaker", exportSpeaker);
-      console.log("timestamp", exportTimestamp);
+   
       let doc = new Document();
       let children = [];
 
@@ -178,7 +200,7 @@ class Transcript extends React.Component {
       doc.addSection({
         children,
       });
-      console.log(children);
+     
       Packer.toBlob(doc).then((blob) => {
         fileSaver.saveAs(blob, this.state.title + ".docx");
       });
@@ -208,7 +230,7 @@ class Transcript extends React.Component {
         }
       });
 
-      console.log("export", exportString);
+      
       const file = new Blob([exportString], { type: "text/plain" });
       fileSaver.saveAs(file, this.state.title + ".txt");
     }
@@ -240,7 +262,7 @@ class Transcript extends React.Component {
 
       return { words: words, text: textString, speaker: set.speaker };
     });
-    console.log(mappedio);
+   
     const edit = {
       transcription: mappedio,
     };
@@ -413,7 +435,7 @@ class Transcript extends React.Component {
     });
   };
   handleSpeaker = async (val, key) => {
-    console.log("value here is", val, key);
+   
     let { transcript, speakerList } = this.state;
     const findSpeaker = transcript[key].speaker;
     transcript.forEach((ele, key) => {
@@ -427,7 +449,6 @@ class Transcript extends React.Component {
   mapEverything = () => {
     const { transcript } = this.state;
     const mapped = transcript.map((ele, key) => {
-     
       return (
         <div className="dialogue row" key={key}>
           <div className="left-text col-2">
@@ -470,7 +491,7 @@ class Transcript extends React.Component {
     await this.setState({ downloads: event.target.value });
   };
   exportFormatHandler = (event) => {
-    console.log(event);
+  
     this.setState({ inline: event.target.checked });
   };
   deleteEpisode = async () => {
@@ -559,7 +580,11 @@ class Transcript extends React.Component {
                 File Type <hr />
               </div>
               <div className="docType">
-                <select name="downloads" id='selectLang' onChange={this.extractType}>
+                <select
+                  name="downloads"
+                  id="selectLang"
+                  onChange={this.extractType}
+                >
                   <option value="docx">Microsoft Word Document (.docx)</option>
                   <option value="txt">Text File (.txt)</option>
                 </select>

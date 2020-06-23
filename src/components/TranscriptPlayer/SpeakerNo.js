@@ -5,16 +5,13 @@ class SpeakerNo extends React.Component {
     inp: false,
     speaker: this.props.speaker,
   };
-  constructor(props)
-  { super(props)
-    this.setState({speaker: this.props.speaker})
-  }
+ 
   componentDidMount=()=>
   {
     this.setState({speaker: this.props.speaker})
   }
   handleBlur = () => {
-    
+    console.log("here buststs")
     this.props.handleSpeaker(this.props.speaker, this.props.key1);
     this.setState({ inp: false ,speaker:""});
   };
