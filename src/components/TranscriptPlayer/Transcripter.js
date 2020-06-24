@@ -24,19 +24,24 @@ class Transcript extends React.Component {
     notes: "Create notes here",
     speakerList: [],
     downloads: "docx",
+    selectedWord: {
+      para: null,
+      word: null,
+    },
+    onChangeVal: null,
   };
 
   componentDidMount = async () => {
-    // document.addEventListener("selectionchange", () => {
-    //   const lol = document.getSelection().anchorNode.parentElement;
-    //   const str = lol.id + "st";
-    //   console.log(lol);
-    //   if (this.state[str]) {
-    //     const audio = document.getElementById("audiofile");
+    document.addEventListener("selectionchange", () => {
+      const selection = document.getSelection().anchorNode.parentElement;
+      const str = selection.attributes.name.nodeValue;
 
-    //     audio.currentTime = this.state[str];
-    //   }
-    // });
+      if (!new RegExp("^[a-zA-Z]*$").test(str)) {
+        const audio = document.getElementById("audiofile");
+
+        audio.currentTime = str;
+      }
+    });
     const { id, rss } = this.props;
     if (id) {
       localStorage.setItem("t_id", id);
@@ -65,34 +70,26 @@ class Transcript extends React.Component {
             alert("something went wrong with server");
             this.setState({ redirect: true });
           });
+          
+          let speakerList = [];
+      response.data.transcription.forEach((result, arrkey) => {
+        speakerList[arrkey] = result.speaker;
+      });
       await this.setState(
         {
           transcript: response.data.transcription,
           notes: response.data.notes,
           src: response.data.url,
           title: response.data.title,
+          speakerList
         },
-        () => {
-         
-          response.data.transcription.forEach((result, arrkey) => {
-            result.words.forEach((ele, key) => {
-              const str = arrkey + "" + key;
-              const str2 = arrkey + "" + key + "i";
-              const str3 = arrkey + "" + key + "st";
-              this.setState(
-                {
-                  [str2]: ele.word,
-                  [str]: ele.word,
-                  [str3]: ele.start,
-                }
-              );
-            });
-            const { speakerList } = this.state;
-            speakerList[arrkey] = result.speaker;
-            this.setState({ speakerList });
-          });
-        }
+        
       );
+      response.data.transcription.forEach((result, arrkey) => {
+        const { speakerList } = this.state;
+        speakerList[arrkey] = result.speaker;
+        this.setState({ speakerList });
+      });
     } else {
       response = await bbckaldi.get("/episode/" + t_id).catch((err) => {
         alert("Server was unable to transcribe the given file");
@@ -115,33 +112,19 @@ class Transcript extends React.Component {
             ? { data: { url: response.data.url } }
             : { data: { url: "" } };
       if (!response) response = { data: { transcription: [] } };
-
+      let speakerList = [];
+      response.data.transcription.forEach((result, arrkey) => {
+        speakerList[arrkey] = result.speaker;
+      });
       this.setState(
         {
           transcript: response.data.transcription,
           src: getUrl.data.url,
           notes: response.data.notes,
+          title: response.data.title,
+          speakerList,
         },
-        () => {
-         
-          response.data.transcription.forEach((result, arrkey) => {
-            result.words.forEach((ele, key) => {
-              const str = arrkey + "" + key;
-              const str2 = arrkey + "" + key + "i";
-              const str3 = arrkey + "" + key + "st";
-              this.setState(
-                {
-                  [str2]: ele.word,
-                  [str]: ele.word,
-                  [str3]: ele.start,
-                }
-              );
-            });
-            const { speakerList } = this.state;
-            speakerList[arrkey] = result.speaker;
-            this.setState({ speakerList });
-          });
-        }
+       
       );
     }
 
@@ -160,7 +143,6 @@ class Transcript extends React.Component {
   exportData = (type) => {
     const { exportSpeaker, exportTimestamp } = this.state;
     if (type === "docx") {
-   
       let doc = new Document();
       let children = [];
 
@@ -200,7 +182,7 @@ class Transcript extends React.Component {
       doc.addSection({
         children,
       });
-     
+
       Packer.toBlob(doc).then((blob) => {
         fileSaver.saveAs(blob, this.state.title + ".docx");
       });
@@ -230,7 +212,6 @@ class Transcript extends React.Component {
         }
       });
 
-      
       const file = new Blob([exportString], { type: "text/plain" });
       fileSaver.saveAs(file, this.state.title + ".txt");
     }
@@ -262,7 +243,7 @@ class Transcript extends React.Component {
 
       return { words: words, text: textString, speaker: set.speaker };
     });
-   
+
     const edit = {
       transcription: mappedio,
     };
@@ -279,34 +260,45 @@ class Transcript extends React.Component {
       return <br></br>;
     } else {
       const mappedWord = transcript.map((ele, key) => {
-        const strKey = arrkey + "" + key;
+        const strKey = arrkey + "i" + key;
         const str1 = arrkey + "" + key + "i";
-        const str2 = arrkey + "" + key + "hidi";
-        const str3 = arrkey + "" + key + "hid";
 
         if (ele)
           return (
             <div style={{ display: "inline" }} key={key}>
               <span
                 id={strKey}
-                onClick={this.handleWordClick(ele.word, strKey)}
-                hidden={this.state[str3] ? this.state[str3] : false}
+                name={ele.start}
+                onClick={this.handleWordClick(arrkey, key, ele.word)}
+                hidden={
+                  this.state.selectedWord.para === arrkey &&
+                  this.state.selectedWord.word === key
+                    ? true
+                    : false
+                }
               >
                 {" "}
-                {this.state[strKey]}{" "}
+                {ele.word}{" "}
               </span>
               <input
                 type="text"
                 id={str1}
                 name={str1}
-                value={this.state[str1]}
-                hidden={
-                  this.state[str2] === undefined ? true : this.state[str2]
+                value={
+                  this.state.onChangeVal || this.state.onChangeVal === ""
+                    ? this.state.onChangeVal
+                    : ele.word
                 }
-                onChange={this.handleChange(strKey, str1)}
-                onBlur={this.handleBlur(str2, str3)}
-                onSubmit={this.handleBlur(str2, str3)}
-                onKeyUp={this.handleEnter(str2, str3)}
+                hidden={
+                  this.state.selectedWord.para === arrkey &&
+                  this.state.selectedWord.word === key
+                    ? false
+                    : true
+                }
+                onChange={this.handleChange}
+                onBlur={this.handleBlur(arrkey, key)}
+                onSubmit={this.handleBlur(arrkey, key)}
+                onKeyUp={this.handleEnter(arrkey, key)}
               />
             </div>
           );
@@ -327,34 +319,33 @@ class Transcript extends React.Component {
       );
     }
   };
-  handleEnter = (input1, input2) => (e) => {
-    if (e.keyCode === 13 || e.which === 13)
-      this.setState({ [input1]: true, [input2]: false });
-  };
-  handleBlur = (input1, input2) => (e) => {
-    this.setState({ [input1]: true, [input2]: false });
-  };
-  handleChange = (input1, input2) => (e) => {
-    this.setState({ [input1]: e.target.value, [input2]: e.target.value });
-  };
-  handleWordClick = (word, index) => async (ele) => {
-    const str = index + "hidi";
-    const str1 = index + "i";
-    const str2 = index + "hid";
-    document.getElementById(str1).focus();
-    if (this.state.step === 1) {
-      await this.setState({ [str2]: true, [str]: false, isOpen: str, step: 2 });
-    } else {
-      const { isOpen } = this.state;
-      const close = isOpen.substring(0, isOpen.length - 1);
-      await this.setState({
-        [str2]: true,
-        [str]: false,
-        isOpen: str,
-        [isOpen]: true,
-        [close]: false,
+  handleEnter = (parakey, wordkey) => (e) => {
+    if (e.keyCode === 13 || e.which === 13) {
+      const { transcript } = this.state;
+      transcript[parakey].words[wordkey].word = this.state.onChangeVal;
+      this.setState({
+        transcript,
+        selectedWord: { para: null, word: null },
       });
     }
+  };
+  handleBlur = (parakey, wordkey) => (e) => {
+    const { transcript } = this.state;
+    transcript[parakey].words[wordkey].word = this.state.onChangeVal;
+    this.setState({
+      transcript,
+      selectedWord: { para: null, word: null },
+      onChangeVal: null,
+    });
+  };
+  handleChange = (e) => {
+    this.setState({ onChangeVal: e.target.value });
+  };
+  handleWordClick = (parakey, wordkey, word) => async (ele) => {
+    this.setState({
+      selectedWord: { para: parakey, word: wordkey },
+      onChangeVal: word,
+    });
   };
   handlePausePlay = async (e) => {
     const audio = document.getElementById("audiofile");
@@ -418,24 +409,20 @@ class Transcript extends React.Component {
     transcript.forEach((ele, arrkey) => {
       const transcripter = ele.words;
       transcripter.forEach((word, ind) => {
-        const index = arrkey + "" + ind;
+        const index = arrkey + "i" + ind;
         if (
-          event.target.currentTime >= word.start &&
-          event.target.currentTime <= word.end
+          event.target.currentTime * 100 >= word.start * 100 &&
+          event.target.currentTime * 100 <= word.end * 100
         ) {
           document.getElementById(index).style.background = "yellow";
-        } else if (event.target.currentTime >= word.end) {
-          document.getElementById(index).style.background = "none";
-          document.getElementById(index).style.color = "black";
         } else {
           document.getElementById(index).style.background = "none";
-          document.getElementById(index).style.color = "blue";
         }
       });
     });
+
   };
   handleSpeaker = async (val, key) => {
-   
     let { transcript, speakerList } = this.state;
     const findSpeaker = transcript[key].speaker;
     transcript.forEach((ele, key) => {
@@ -491,7 +478,6 @@ class Transcript extends React.Component {
     await this.setState({ downloads: event.target.value });
   };
   exportFormatHandler = (event) => {
-  
     this.setState({ inline: event.target.checked });
   };
   deleteEpisode = async () => {
