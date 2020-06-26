@@ -158,15 +158,14 @@ export default class Dashboard extends React.Component {
           this.setState({ percentTranscribeCompleted: percentCompleted });
         },
       })
-      .then(async (resp) => {
+      .then((resp) => {
         clearInterval(progress);
         this.setState({
           percentTranscribeCompleted: 100,
-          successTrancribe: 'true',
+          successTranscribe: 'true',
         });
-        this.getEpisodes().then(() =>
-          this.setState({ percentTranscribeCompleted: null })
-        );
+        this.setState({ percentTranscribeCompleted: null });
+        this.getEpisodes();
         this.getManual();
         this.getRss();
         this.getIsEdited();
