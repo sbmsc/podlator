@@ -495,3 +495,23 @@ Note that in order to support routers that use HTML5 `pushState` API, you may wa
 ## Publishing Components To npm
 
 Create React App doesn't provide any built-in functionality to publish a component to npm. If you're ready to extract a component from your project so other people can use it, we recommend moving it to a separate directory outside of your project and then using a tool like [nwb](https://github.com/insin/nwb#react-components-and-libraries) to prepare it for publishing.
+
+## Screenshots
+
+![Menu](app-screenshots/menu.jpg)
+
+![Transcript](app-screenshots/transcript.jpg)
+
+![Transcribe](app-screenshots/transcribe.jpg)
+
+![Podcast Feed](app-screenshots/pod_feed.jpg)
+
+![Upload](app-screenshots/upload.jpg)
+
+![Progress](app-screenshots/audio_progress.jpg)
+
+![Audio Drop](app-screenshots/audio_drop.jpg)
+
+![Transcribe Progress](app-screenshots/transcribe_progress.jpg)
+
+![Export](app-screenshots/export.jpg)
